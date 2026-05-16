@@ -1,0 +1,210 @@
+
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1320px;
+    }
+}
+
+@media (max-width: 1024px) {
+    :root {
+        --font-size-4xl: 2.25rem;
+        --font-size-3xl: 1.75rem;
+    }
+
+    .hero-container {
+        gap: var(--spacing-2xl);
+    }
+
+    .hero-content h1 {
+        font-size: 2.25rem;
+    }
+
+    .benefits-wrapper {
+        gap: var(--spacing-2xl);
+    }
+
+    .mission-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --font-size-4xl: 2rem;
+        --font-size-3xl: 1.5rem;
+        --font-size-2xl: 1.25rem;
+        --navbar-height: 64px;
+    }
+
+    section {
+        padding: var(--spacing-3xl) 0;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: var(--navbar-height);
+        flex-direction: column;
+        background-color: var(--color-white);
+        width: 100%;
+        text-align: center;
+        transition: left 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        padding: var(--spacing-lg) 0;
+        gap: 0;
+        z-index: var(--z-fixed);
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .nav-menu li {
+        padding: var(--spacing-md) 0;
+    }
+
+    .nav-menu a::after {
+        display: none;
+    }
+
+    .nav-button {
+        display: none;
+    }
+
+    .hero {
+        min-height: auto;
+        padding-top: calc(var(--navbar-height) + 30px);
+        padding-bottom: var(--spacing-2xl);
+    }
+
+    .hero-container {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xl);
+    }
+
+    .hero-content h1 {
+        font-size: 1.75rem;
+    }
+
+    .hero-image img {
+        height: 280px;
+    }
+
+    .benefits-wrapper {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-2xl);
+    }
+
+    .benefits-images .img-wrapper img {
+        height: 150px;
+    }
+
+    .benefits-images .img-wrapper.large img {
+        height: 180px;
+    }
+
+    .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mission-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .partners-grid {
+        gap: var(--spacing-xl);
+    }
+
+    .partner-card img {
+        max-height: 55px;
+    }
+
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-container {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-lg);
+    }
+
+    .cta-content h2 {
+        font-size: var(--font-size-xl);
+    }
+
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: var(--spacing-xl);
+    }
+
+    .footer-links-section {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --font-size-4xl: 1.75rem;
+        --font-size-3xl: 1.375rem;
+    }
+
+    .container {
+        padding: 0 var(--spacing-md);
+    }
+
+    section {
+        padding: var(--spacing-2xl) 0;
+    }
+
+    .hero-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .hero-image img {
+        height: 220px;
+    }
+
+    .benefits-images {
+        grid-template-columns: 1fr;
+    }
+
+    .benefits-images .img-wrapper img,
+    .benefits-images .img-wrapper.large img {
+        height: 180px;
+    }
+
+    .stats-row {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .partners-grid {
+        gap: var(--spacing-lg);
+    }
+
+    .partner-card img {
+        max-height: 45px;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        font-size: var(--font-size-sm);
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+}

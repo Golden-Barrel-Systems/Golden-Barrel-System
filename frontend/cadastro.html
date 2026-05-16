@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Golden Bar</title>
+    <link rel="stylesheet" href="./css/pages.css/cadastro.css" />
+    <link rel="stylesheet" href="script.js" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="img-section" style="background-image: url('./Assets/images/pages/cadastro/img_page-0001.jpg'); background-position: center; background-size: cover; background-repeat: no-repeat;">
+            <button onclick="voltar()">Voltar</button>    
+        </div>
+        <div class="cadastro-section">
+            <div class="content">
+                <h1 class="title">Cadastro - Golden Barrel System</h1>
+                <div class="form-cadastro">
+                    <div class="nome">
+                        <label for="input_nome">Nome <span id="mensagemnome"></span></label>
+                        <input type="text" id="input_nome" class="input" placeholder="Insira seu nome aqui" />
+                    </div>
+                    <div class="cpf">
+                        <label for="input_codigo">CPF <span id="mensagemcpf"></span></label>
+                        <input type="text" id="input_CPF" maxlength="14" oninput="CPF()" class="input"
+                            placeholder="Confirme seu CPF aqui" />
+                    </div>
+                    <div class="email">
+                        <label for="input_email">Email <span id="mensagememail"></span></label>
+                        <input type="text" id="input_email" class="input" placeholder="Insira seu email aqui" />
+                    </div>
+                    <div class="password">
+                        <label for="input_senha">Senha <span id="mensagemsenha"></span></label>
+                        <input type="password" id="input_senha" oninput="senhaa()" class="input"
+                            placeholder="Insira sua senha aqui" />
+                    </div>
+                    <div class="confirm-password">
+                        <label for="input_confi_senha">Confirme sua senha <span id="mensagemconfirm"></span></label>
+                        <input type="password" id="input_confi_senha" class="input"
+                            placeholder="Confirme sua senha aqui" />
+                    </div>
+                    <div class="codigo">
+                        <label for="input_codigo">Código da empresa <span id="mensagemcod"></span></label>
+                        <input type="password" id="input_codigo" class="input" placeholder="Confirme seu código aqui" />
+                    </div>
+                    <div class="login-link">
+                        <a href="./login.html">Já tem uma conta?</a>
+                    </div>
+
+
+                    <button class="btn-logar" onclick="cadastrar()">cadastrar</button>
+                </div>
+            </div>
+</body>
+
+</html>
+
+<script>
+    function voltar() {
+        window.location = '../index.html'
+    }
+
+    function CPF() {
+        let cpf = input_CPF.value;
+
+        if (cpf.length == 4) {
+            if (cpf.substring(3, 4) != ".") {
+                input_CPF.value = cpf.substring(0, 3) + "." + cpf.substring(3);
+            }
+        }
+
+        if (cpf.length == 8) {
+            if (cpf.substring(7, 8) != ".") {
+                input_CPF.value = cpf.substring(0, 7) + "." + cpf.substring(7);
+            }
+        }
+
+        if (cpf.length == 12) {
+            if (cpf.substring(11, 12) != "-") {
+                input_CPF.value = cpf.substring(0, 11) + "-" + cpf.substring(11);
+            }
+        }
+
+    }
+
+    let validaçãoS = ``
+    let mensagem = ``
+    function senhaa() {
+        let contadorSenha = 0
+    
+        let senha = input_senha.value;
+    
+
+        let temNumero = false;
+
+
+        for (let i = 0; i < senha.length; i++) {
+        if (senha[i] >= '0' && senha[i] <= '9') {
+            temNumero = true;
+            }
+        }
+        
+        if (senha == senha.toLowerCase()) { }
+        else if (senha != senha.toLowerCase()) {contadorSenha++; }
+        if (senha == senha.toUpperCase()) { }
+        else if (senha != senha.toUpperCase()) { contadorSenha++ }
+        if (temNumero != true) {}
+        else if (temNumero == true) { contadorSenha ++}
+        if (senha.length < 8) {}
+        else if (senha.length >=8) { contadorSenha++}
+    
+
+     if (contadorSenha == 4) {
+                validaçãoS = 'Forte'
+                mensagem = `<span style= "color: green">*Senha forte</span>`
+            } else if (contadorSenha >= 2) {
+                validaçãoS= 'Média'
+                mensagem = `<span style= "color: orange">*Senha média</span>`
+            } else if (contadorSenha == 1) {
+               
+                mensagem = `<span style= "color: red">*Senha fraca</span>`
+            } else if (contadorSenha == 0) {
+                mensagem = `<span style= "color: red">*Senha insegura</span>`
+            }
+            mensagemsenha.innerHTML = mensagem
+
+    }
+
+     function cadastrar() {
+        let nome = input_nome.value;
+        let cpf = input_CPF.value;
+        let email = input_email.value;
+        let senha = input_senha.value;
+        let confirmaçãoSenha = input_confi_senha.value;
+        let codigo = input_codigo.value;
+        let codigoDefinido = 'ABC'
+        let contador = 0
+       
+        if (nome.length < 3) {
+
+            mensagemnome.innerHTML = `<span style= "color: red">*Insira um nome válido</span>`
+        } else {
+            contador++;
+            mensagemnome.innerHTML = ``
+        }
+        if (!email.includes('@') || !email.includes('.') || email.endsWith('@')) {
+
+            mensagememail.innerHTML = `<span style= "color: red">*Insira um email válido</span>`
+        } else {
+            contador++;
+            mensagememail.innerHTML = ``
+        }
+        if (validaçãoS != 'Forte') {
+
+            mensagemsenha.innerHTML = `<span style= "color: red">*Necessita de uma senha forte</span>`
+
+        } else {
+            contador++;
+            mensagemsenha.innerHTML = mensagem
+        }
+
+     if (senha != confirmaçãoSenha) {
+
+            mensagemconfirm.innerHTML = `<span style= "color: red">*Senha incorreta</span>`
+        } else {
+            contador++;
+            mensagemconfirm.innerHTML = ``
+        }
+        if (cpf.length != 14) {
+
+            mensagemcpf.innerHTML = `<span style= "color: red">*CPF inválido</span>`
+        } else {
+            contador++;
+            mensagemcpf.innerHTML = ``
+        }
+        if (codigo != codigoDefinido) {
+
+            mensagemcod.innerHTML = `<span style= "color: red">*Código incorreto</span>`
+        } else {
+            contador++;
+            mensagemcod.innerHTML = ``
+        }
+         
+        if (contador == 6) {
+            window.location = '../login-estilo/index.html'
+        }
+    }
+    
+</script>

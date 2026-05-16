@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Maturação de Whisky</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --golden: #F0A500;
+            --golden-hover: #d49000;
+            --title-color: #1a1a1a;
+            --label-color: #666666;
+            --input-bg: #EBEBEB;
+            --input-placeholder: #aaaaaa;
+            --page-bg: #FFFFFF;
+            --result-bg: #FAFAFA;
+            --result-border: #F0A500;
+            --text-main: #2d2d2d;
+            --text-muted: #888888;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--title-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+            padding: 48px 40px;
+            background: var(--page-bg);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--title-color);
+            text-align: center;
+            margin-bottom: 36px;
+            letter-spacing: -0.3px;
+        }
+
+        .input-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--label-color);
+            margin-bottom: 8px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 14px 22px;
+            border: none;
+            border-radius: 30px;
+            font-size: 15px;
+            color: var(--text-main);
+            background: var(--input-bg);
+            outline: none;
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+            appearance: textfield;
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        input[type="number"]::placeholder {
+            color: var(--input-placeholder);
+        }
+
+        input[type="number"]:focus {
+            background: #e0e0e0;
+            box-shadow: 0 0 0 3px rgba(240, 165, 0, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 8px;
+            background: var(--golden);
+            color: var(--title-color);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+
+        button:hover {
+            background: var(--golden-hover);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .resultado {
+            margin-top: 28px;
+            padding: 20px 24px;
+            background: var(--result-bg);
+            border-radius: 14px;
+            border-left: 4px solid var(--result-border);
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-main);
+            animation: fadeIn 0.4s ease;
+        }
+
+        .resultado-vazio {
+            text-align: center;
+            color: var(--text-muted);
+            border-left-color: #dddddd;
+            font-size: 13px;
+        }
+
+        .resultado-mensagem {
+            border-left-color: var(--golden);
+            margin-top: 12px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Simulador de Maturação de Whisky</h1>
+
+        <div class="input-group">
+            <label>Tempo de maturação (anos)</label>
+            <input type="number" id="input_tempo" placeholder="Ex: 10">
+        </div>
+
+        <div class="input-group">
+            <label>Volume inicial (litros)</label>
+            <input type="number" id="input_volume" placeholder="Ex: 200">
+        </div>
+
+        <div class="input-group">
+            <label>Taxa de evaporação (% ao ano)</label>
+            <input type="number" id="input_taxa" placeholder="Ex: 2">
+        </div>
+
+        <div class="input-group">
+            <label>Valor por litro (R$)</label>
+            <input type="number" id="input_valor" placeholder="Ex: 150">
+        </div>
+
+        <button onclick="calcular()">Calcular resultado</button>
+
+        <div class="resultado resultado-vazio" id="div_resultado">
+            Os resultados aparecerão aqui após o cálculo.
+        </div>
+
+        <div class="resultado resultado-mensagem" id="div_mensagem" style="display:none;"></div>
+    </div>
+
+    <script>
+
+    function calcular() {
+
+        let tempo = Number(input_tempo.value);
+        let volume = Number(input_volume.value);
+        let taxa = Number(input_taxa.value);
+        let valor = Number(input_valor.value);
+
+        // taxa reduzida (15% menos evaporação)
+        let taxa_reduzida = taxa * 0.85;
+
+        // SEM sistema
+        let perda_sem = volume * (taxa / 100) * tempo;
+        let volume_sem = volume - perda_sem;
+        let valor_sem = volume_sem * valor;
+
+        // COM sistema
+        let perda_com = volume * (taxa_reduzida / 100) * tempo;
+        let volume_com = volume - perda_com;
+        let valor_com = volume_com * valor;
+
+        let valor_inicial = volume * valor;
+
+        let economia = valor_com - valor_sem;
+        let volumeEco = volume_com - volume_sem;
+
+        div_resultado.classList.remove("resultado-vazio");
+
+        div_resultado.innerHTML = `
+            Valor inicial do barril: R$ ${valor_inicial.toFixed(2)} <br>
+            <br>
+            Sem sistema:<br>
+            Volume final: ${volume_sem.toFixed(2)} L <br>
+            Valor final: R$ ${valor_sem.toFixed(2)} <br>
+            <br>
+            Com sistema (15% menos evaporação):<br>
+            Volume final: ${volume_com.toFixed(2)} L <br>
+            Valor final: R$ ${valor_com.toFixed(2)} <br>
+            <br>
+            Economia estimada: <strong>R$ ${economia.toFixed(2)}</strong> <br>
+            Volume economizado estimado: <strong> ${volumeEco.toFixed(2)}</strong>
+        `;
+    }
+
+
+</script>
+</body>
+
+</html>

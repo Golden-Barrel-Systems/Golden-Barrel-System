@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Golden Barrel - Tecnologia IoT para monitoramento de maturação de whisky. Reduza o Angel's Share e garanta a excelência.">
+    <meta name="theme-color" content="#1a4d3e">
+    <meta name="author" content="Golden Barrel">
+
+    <title>Golden Barrel | Smart Aging Solutions</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <header class="navbar" id="navbar">
+        <nav class="navbar-container">
+            <a href="#" class="logo">
+                <img src="Assets/images/logo1.jpg" alt="Golden Barrel - Solutions for Whiskys">
+            </a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#benefits">Vantagens</a></li>
+                <li><a href="#system">Tecnologia</a></li>
+                <li><a href="#mission">Nossa Visão</a></li>
+                <li><a href="#testimonials">Casos de Sucesso</a></li>
+                <li><a href="#contact-cta">Acesso</a></li>
+            </ul>
+            <button class="nav-button" id="nav-cta-btn" onclick="cadastrarBtn()">Começar Agora</button>
+            <div class="hamburger" id="hamburger" aria-label="Abrir menu" role="button" tabindex="0">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <section id="hero" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Golden Barrel - Onde a Tradição encontra a Inteligência de Dados.</h1>
+                <p class="hero-subtitle">Maximizamos a eficiência do seu processo de maturação com monitoramento IoT em tempo real, reduzindo perdas e garantindo o padrão ouro em cada barril.</p>
+                <button class="btn btn-primary" id="hero-cta-btn" onclick="acessoBtn()">Acessar sistema</button>
+            </div>
+            <div class="hero-image">
+                <img src="Assets/images/img820.jpg" alt="Armazém de barris de whisky monitorados pela Golden Barrel" >
+            </div>
+        </div>
+    </section>
+
+    <section id="benefits" class="benefits">
+        <div class="container">
+            <div class="benefits-wrapper">
+                <div class="benefits-left">
+                    <h2>Por que investir na Golden Barrel?</h2>
+                    <p>Somos uma startup focada em transformar o "Angel’s Share" de uma perda inevitável em uma variável controlada. Nossa tecnologia permite que produtores brasileiros superem os desafios climáticos com dados precisos e automação.</p>
+                    <div class="benefits-images">
+                        <div class="img-wrapper">
+                            <img src="Assets/images/img824.jpg" alt="Barris de carvalho selecionados" >
+                        </div>
+                        <div class="img-wrapper">
+                            <img src="Assets/images/img858.jpg" alt="Armazenamento controlado" >
+                        </div>
+                        <div class="img-wrapper large">
+                            <img src="Assets/images/img828.jpg" alt="Tecnologia em destilaria moderna" >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="benefits-right">
+                    <div class="benefit-item">
+                        <div class="check-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="benefit-item-content">
+                            <h4>Redução do Angel's Share</h4>
+                            <p>Controle rigoroso da umidade para minimizar a evaporação excessiva em climas tropicais.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="check-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="benefit-item-content">
+                            <h4>Padronização Sensorial</h4>
+                            <p>Mantenha a estabilidade química e o perfil de sabor do seu produto em todas as safras.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="check-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="benefit-item-content">
+                            <h4>Mitigação de Riscos</h4>
+                            <p>Alertas imediatos sobre variações críticas de temperatura que comprometem o envelhecimento.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="check-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="benefit-item-content">
+                            <h4>ROI e Escalabilidade</h4>
+                            <p>Solução de baixo custo operacional com alto impacto direto na margem de lucro final.</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="benefits-cta-btn" onclick="cadastrarBtn()">Quero começar</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="system" class="system">
+        <div class="container">
+            <div class="section-header">
+                <h2>Tecnologia IoT de Alta Performance</h2>
+                <p class="section-subtitle">Utilizamos sensores de alta sensibilidade e integração via microcontroladores para entregar um ecossistema de dados completo para sua gestão.</p>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-item">
+                    <h4>Precisão</h4>
+                    <span class="stat-value">99.9%</span>
+                </div>
+                <div class="stat-item">
+                    <h4>Redução de Perdas</h4>
+                    <span class="stat-value">até 30%</span>
+                </div>
+                <div class="stat-item">
+                    <h4>Uptime do Sistema</h4>
+                    <span class="stat-value">24/7</span>
+                </div>
+                <div class="stat-item">
+                    <h4>Análise de Dados</h4>
+                    <span class="stat-value">Real-time</span>
+                </div>
+            </div>
+
+            <div class="dashboard-wrapper">
+                <img src="Assets/images/dashboard.png" alt="Dashboard Golden Barrel - Monitoramento de Temperatura e Umidade" >
+            </div>
+        </div>
+    </section>
+
+    <section id="partners" class="partners">
+        <div class="container">
+            <div class="section-header">
+                <h2>Veja como mudamos o seu negócio</h2>
+            </div>
+            <div class="section-content">
+                <p>Produtores de whisky que adotaram a Golden Barrel relataram uma transformação significativa em seus processos de maturação. Com a nossa tecnologia, eles conseguiram reduzir o Angel's Share em até 30%, estabilizar o perfil sensorial de seus produtos e aumentar a eficiência operacional. A Golden Barrel não é apenas uma solução tecnológica, mas um parceiro estratégico para quem busca excelência e inovação no mercado de destilados.</p>
+                <button class="btn btn-primary" id="benefits-cta-btn" onclick="calculadoraBtn()">Testar viabilidade</button>
+            </div>
+            
+        </div>
+    </section>
+
+    <section id="mission" class="mission">
+        <div class="container">
+            <div class="section-header">
+                <h2>Nossos Pilares</h2>
+            </div>
+            <div class="mission-grid">
+                <div class="mission-card">
+                    <div class="card-image">
+                        <img src="Assets/images/img824.jpg" alt="Digitalização do Processo" >
+                    </div>
+                    <div class="card-body">
+                        <h3>Digitalizar a Maturação</h3>
+                        <p>Trazer a precisão digital para um dos processos mais antigos do mundo, sem perder a essência do produto.</p>
+                    </div>
+                </div>
+                <div class="mission-card">
+                    <div class="card-image">
+                        <img src="Assets/images/img858.jpg" alt="Sustentabilidade e Eficiência" >
+                    </div>
+                    <div class="card-body">
+                        <h3>Eficiência Sustentável</h3>
+                        <p>Evitar o desperdício de recursos e insumos através de uma análise climática preditiva e eficaz.</p>
+                    </div>
+                </div>
+                <div class="mission-card">
+                    <div class="card-image">
+                        <img src="Assets/images/img828.jpg" alt="Qualidade Garantida" >
+                    </div>
+                    <div class="card-body">
+                        <h3>Excelência em Dados</h3>
+                        <p>Fornecer ferramentas robustas para tomada de decisão baseada em fatos, não em suposições.</p>
+                        <button class="btn btn-primary" id="mission-cta-btn" onclick="cadastrarBtn()">Unir-se à Inovação</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>O que dizem os especialistas</h2>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Desde que implementamos o sistema da Golden Barrel, conseguimos identificar variações de umidade que nunca tínhamos percebido. A redução na perda de produto pagou o investimento em apenas três meses."</p>
+                    <div class="testimonial-author">
+                        <img src="Assets/images/img862.jpg" alt="Especialista em Destilação" class="avatar">
+                        <div class="testimonial-author-info">
+                            <h4>Gabriella M.</h4>
+                            <p>Mestre Destiladora</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Como investidor, procuro soluções escaláveis que resolvem problemas reais de mercado. A Golden Barrel ataca uma dor global do setor de destilados com uma engenharia impecável e custo acessível."</p>
+                    <div class="testimonial-author">
+                        <img src="Assets/images/img862.jpg" alt="Investidor de Tech" class="avatar">
+                        <div class="testimonial-author-info">
+                            <h4>Ricardo S.</h4>
+                            <p>Venture Capitalist</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact-cta" class="contact-cta">
+        <div class="container">
+            <div class="cta-container">
+                <div class="cta-content">
+                    <h2>Pronto para proteger o seu legado?</h2>
+                    <p>Fale com um de nossos consultores e descubra como a Golden Barrel pode elevar sua produtividade.</p>
+                </div>
+                <button class="btn" id="cta-button" onclick="cadastrarBtn()">Cadastre-se</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="Assets/images/logo2.jpg" alt="Golden Barrel Logo">
+                </div>
+                <div class="footer-section">
+                    <h5>Redes Sociais</h5>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section footer-links-section">
+                    <p>&copy; 2026 Golden Barrel - Inteligência em Maturação. Todos os direitos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function cadastrarBtn() {
+            window.location.href = './cadastro.html'
+        }
+        function calculadoraBtn() {
+            window.location.href = './calculadora.html'
+        }
+    </script>
+</body>
+</html>
