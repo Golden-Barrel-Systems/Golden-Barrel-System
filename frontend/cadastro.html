@@ -11,8 +11,9 @@
 
 <body>
     <div class="container">
-        <div class="img-section" style="background-image: url('./Assets/images/pages/cadastro/img_page-0001.jpg'); background-position: center; background-size: cover; background-repeat: no-repeat;">
-            <button onclick="voltar()">Voltar</button>    
+        <div class="img-section"
+            style="background-image: url('./Assets/images/pages/cadastro/img_page-0001.jpg'); background-position: center; background-size: cover; background-repeat: no-repeat;">
+            <button onclick="voltar()">Voltar</button>
         </div>
         <div class="cadastro-section">
             <div class="content">
@@ -89,46 +90,46 @@
     let mensagem = ``
     function senhaa() {
         let contadorSenha = 0
-    
+
         let senha = input_senha.value;
-    
+
 
         let temNumero = false;
 
 
         for (let i = 0; i < senha.length; i++) {
-        if (senha[i] >= '0' && senha[i] <= '9') {
-            temNumero = true;
+            if (senha[i] >= '0' && senha[i] <= '9') {
+                temNumero = true;
             }
         }
-        
+
         if (senha == senha.toLowerCase()) { }
-        else if (senha != senha.toLowerCase()) {contadorSenha++; }
+        else if (senha != senha.toLowerCase()) { contadorSenha++; }
         if (senha == senha.toUpperCase()) { }
         else if (senha != senha.toUpperCase()) { contadorSenha++ }
-        if (temNumero != true) {}
-        else if (temNumero == true) { contadorSenha ++}
-        if (senha.length < 8) {}
-        else if (senha.length >=8) { contadorSenha++}
-    
+        if (temNumero != true) { }
+        else if (temNumero == true) { contadorSenha++ }
+        if (senha.length < 8) { }
+        else if (senha.length >= 8) { contadorSenha++ }
 
-     if (contadorSenha == 4) {
-                validaçãoS = 'Forte'
-                mensagem = `<span style= "color: green">*Senha forte</span>`
-            } else if (contadorSenha >= 2) {
-                validaçãoS= 'Média'
-                mensagem = `<span style= "color: orange">*Senha média</span>`
-            } else if (contadorSenha == 1) {
-               
-                mensagem = `<span style= "color: red">*Senha fraca</span>`
-            } else if (contadorSenha == 0) {
-                mensagem = `<span style= "color: red">*Senha insegura</span>`
-            }
-            mensagemsenha.innerHTML = mensagem
+
+        if (contadorSenha == 4) {
+            validaçãoS = 'Forte'
+            mensagem = `<span style= "color: green">*Senha forte</span>`
+        } else if (contadorSenha >= 2) {
+            validaçãoS = 'Média'
+            mensagem = `<span style= "color: orange">*Senha média</span>`
+        } else if (contadorSenha == 1) {
+
+            mensagem = `<span style= "color: red">*Senha fraca</span>`
+        } else if (contadorSenha == 0) {
+            mensagem = `<span style= "color: red">*Senha insegura</span>`
+        }
+        mensagemsenha.innerHTML = mensagem
 
     }
 
-     function cadastrar() {
+    function cadastrar() {
         let nome = input_nome.value;
         let cpf = input_CPF.value;
         let email = input_email.value;
@@ -137,7 +138,7 @@
         let codigo = input_codigo.value;
         let codigoDefinido = 'ABC'
         let contador = 0
-       
+
         if (nome.length < 3) {
 
             mensagemnome.innerHTML = `<span style= "color: red">*Insira um nome válido</span>`
@@ -161,7 +162,7 @@
             mensagemsenha.innerHTML = mensagem
         }
 
-     if (senha != confirmaçãoSenha) {
+        if (senha != confirmaçãoSenha) {
 
             mensagemconfirm.innerHTML = `<span style= "color: red">*Senha incorreta</span>`
         } else {
@@ -182,10 +183,54 @@
             contador++;
             mensagemcod.innerHTML = ``
         }
-         
+
         if (contador == 6) {
-            window.location = '../login-estilo/index.html'
+
+            fetch("/usuarios/cadastrar", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    codEmpresaServer: codigo,
+                    senhaServer: senha,
+                    tipoUsuarioServer: "funcionario",
+                    cpfServer: cpf.replace(/\D/g, ''),
+                    emailServer: email
+
+                })
+
+            })
+
+                .then(function (resposta) {
+
+                    console.log("resposta: ", resposta);
+
+                    if (resposta.ok) {
+
+                        alert("Cadastro realizado com sucesso!");
+
+                        window.location = '../login-estilo/index.html'
+
+                    } else {
+
+                        throw "Houve um erro ao tentar realizar o cadastro!";
+
+                    }
+
+                })
+
+                .catch(function (erro) {
+
+                    console.log(`#ERRO: ${erro}`);
+
+                });
+
         }
     }
-    
+
 </script>
