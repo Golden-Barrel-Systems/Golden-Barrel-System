@@ -38,6 +38,8 @@ create table chamados (
     descricao varchar(500),
     nvSuporte INT default 1,
     usuario INT NOT NULL,
+    prioridade enum('baixa', 'media', 'alta') NOT NULL,
+    resposta varchar(500) default 'Sem resposta',
     constraint chkNvSuporte check(nvSuporte IN(1, 2 ,3)),
     constraint fkUsuario foreign key (usuario) references usuario(idUsuario)
 );
@@ -128,10 +130,13 @@ INSERT INTO sensor_meta (idSensor, fabricante, modelo, numSerial, dataInstalacao
 (3, 'ThermoCorp', 'TC-200', 'SN-TC200-0003', '2025-11-15', '2026-04-05'),
 (4, 'HumiSense', 'HS-50', 'SN-HS50-0004', '2025-12-01', '2026-03-20');
 
-INSERT INTO chamados values(default, 'Problema de Login', default, CURDATE(), 'Estou tentando entrar na minha conta mas aparece um erro 403 Forbidden na tela', default, 1);
+INSERT INTO chamados values(default, 'Problema de Login', default, CURDATE(), 'Estou tentando entrar na minha conta mas aparece um erro 403 Forbidden na tela', default, 1, 'media', default);
+INSERT INTO chamados values(default, 'Problema na dashboard', default, CURDATE(), 'A dashboard não mostra as medições de temperatura', default, 1, 'alta', default);
 
 select * from medicoes;
 
 select * from todosChamados;
+
+describe chamados;
 
 UPDATE chamados SET nvSuporte = nvSuporte + 1 WHERE idChamado = 1;

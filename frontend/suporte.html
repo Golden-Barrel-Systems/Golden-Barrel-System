@@ -12,11 +12,31 @@
             <div class="title">
                 <h1>Suporte</h1>
             </div>
+            <div class="filtro" id="filtro">
+                <div class="filtro-item">
+                    <label for="item-status">Status:</label>
+                    <select name="item-status" id="item-status">
+                        <option value="aberto">Aberto</option>
+                        <option value="fechado">Fechado</option>
+                    </select>
+                </div>
+                <div class="filtro-item">
+                    <label for="item-prioridade">Prioridade:</label>
+                    <select name="item-prioridade" id="item-prioridade">
+                        <option value="todas">Todas</option>
+                        <option value="baixa">Baixa</option>
+                        <option value="media">Média</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </div>
+            </div>
             <div class="chamados" id="chamados"></div>
             <!-- Se o usuário tiver permissão para acessar o chatbot -->
             <div class="chat-bot chat-opened">
-                <h2>BoB IA</h2>
-                <div id="chat-bot-msg" class="chat-bot-msg"></div>
+                <h2>GoldenIA</h2>
+                <div id="chat-bot-msg" class="chat-bot-msg">
+                    <ul class="msg-ul" id="msg-ul"></ul>
+                </div>
                 <div class="input-mensagem">
                     <textarea name="user-input" id="user-input" class="user-input" placeholder="Digite sua mensagem..."></textarea>
                 </div>
