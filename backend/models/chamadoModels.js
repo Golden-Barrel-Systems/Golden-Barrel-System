@@ -24,14 +24,15 @@ function repassarChamado(idChamado) {
     return database.executar(instrucaoSql);
 };
 
-function fecharChamado(idChamado) {
+function fecharChamado(idChamado, respostaChamado) {
     const instrucaoSql = `
-        UPDATE chamados SET statuss = 'fechado' WHERE idChamado = ${idChamado}
+        UPDATE chamados SET statuss = 'fechado', resposta = '${respostaChamado}' WHERE idChamado = ${idChamado}
     `
 }
 
 module.exports = {
     buscarChamados,
     enviarChamado,
-    repassarChamado
+    repassarChamado,
+    fecharChamado
 };

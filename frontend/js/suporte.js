@@ -47,11 +47,15 @@ async function carregarChamados(status, prioridade) {
     for (let i = 0; i < chamados.length; i++) {
         const chamado = chamados[i];
 
-        if (prioridade !== 'todas') {   
-            if (chamado.statuss !== status || chamado.prioridade !== prioridade) {
+            if (chamado.statuss !== status) {
                 continue;
             };
-        }
+
+            if (prioridade !== 'todas') {
+                if (chamado.prioridade !== prioridade) {
+                    continue;
+                }
+            }
 
         const data = chamado.dtAbertura.slice(0, 10);
         chamadosContainer.innerHTML += `
