@@ -45,4 +45,5 @@ enviarBtn.addEventListener('click', () => {
         document.getElementById('chat-bot-msg').innerHTML = resposta;
     })
 
+    input.value = '';
 })
