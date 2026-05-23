@@ -26,9 +26,23 @@ create table usuario (
     tipoUsuario varchar(13),
     cpf char(11) unique,
     email varchar(40) unique,
-    constraint chkTipoUsuario check(tipoUsuario IN('funcionario', 'representante', 'administrador')),
+    constraint chkTipoUsuario check(tipoUsuario IN('funcionario', 'representante', 'administrador', 'suporte_1', 'suporte_2', 'suporte_3')),
     constraint fkCodEmpresa foreign key (codEmpresa) references empresa(codEmpresa)
 );
+
+create table chamados (
+	idChamado INT PRIMARY KEY AUTO_INCREMENT,
+    assunto varchar(64) NOT NULL,
+    statuss enum('aberto', 'fechado') default 'aberto',
+    dtAbertura date NOT NULL,
+    descricao varchar(500),
+    nvSuporte INT default 1,
+    usuario INT NOT NULL,
+    constraint chkNvSuporte check(nvSuporte IN(1, 2 ,3)),
+    constraint fkUsuario foreign key (usuario) references usuario(idUsuario)
+);
+
+create view todosChamados as select * from chamados;
 
 create table camara (
 	idCamara INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -114,4 +128,10 @@ INSERT INTO sensor_meta (idSensor, fabricante, modelo, numSerial, dataInstalacao
 (3, 'ThermoCorp', 'TC-200', 'SN-TC200-0003', '2025-11-15', '2026-04-05'),
 (4, 'HumiSense', 'HS-50', 'SN-HS50-0004', '2025-12-01', '2026-03-20');
 
+INSERT INTO chamados values(default, 'Problema de Login', default, CURDATE(), 'Estou tentando entrar na minha conta mas aparece um erro 403 Forbidden na tela', default, 1);
+
 select * from medicoes;
+
+select * from todosChamados;
+
+UPDATE chamados SET nvSuporte = nvSuporte + 1 WHERE idChamado = 1;

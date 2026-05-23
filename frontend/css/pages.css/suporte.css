@@ -45,6 +45,7 @@ main {
     max-width: 1200px;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 20px;
     padding: 20px 20px;
 }
@@ -96,6 +97,35 @@ main {
     font-weight: 600;
     max-width: 50%;
     align-self: center;
+    transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+}
+
+.button:hover {
+    background-color: rgb(6, 33, 26);
+    color: #F6F6F6;
+    font-weight: 600;
+    opacity: 0.9;
+    transform: scale(1.02);
+    -webkit-transform: scale(1.02);
+    -moz-transform: scale(1.02);
+    -ms-transform: scale(1.02);
+    -o-transform: scale(1.02);
+}
+
+.button:active {
+    background-color: rgb(6, 33, 26);
+    color: #F6F6F6;
+    font-weight: 600;
+    opacity: 0.8;
+    transform: scale(0.98);
+    -webkit-transform: scale(0.98);
+    -moz-transform: scale(0.98);
+    -ms-transform: scale(0.98);
+    -o-transform: scale(0.98);
 }
 
 .chat-bot {

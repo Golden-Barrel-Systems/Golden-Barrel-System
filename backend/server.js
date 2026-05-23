@@ -19,6 +19,7 @@ const app = express();
 // const aquariosRouter = require("./src/routes/aquarios");
 // const empresasRouter = require("./src/routes/empresas");
 const chatRouter = require("./routes/chatRoutes");
+const chamadosRouter = require("./routes/chamadoRoutes");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -32,6 +33,7 @@ app.use(cors());
 // app.use("/aquarios", aquariosRouter);
 // app.use("/empresas", empresasRouter);
 app.use("/chat", chatRouter);
+app.use("/chamado", chamadosRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://${HOST_APP}:${PORTA_APP}`)
