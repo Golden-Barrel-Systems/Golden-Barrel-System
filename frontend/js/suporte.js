@@ -71,14 +71,12 @@ if (nivelSuporte === 3) {
                 </li>
             `;
         
-        // carregarResposta(mensagem)
-        // .then(resposta => {
+        carregarResposta(mensagem)
+        .then(resposta => {
             document.getElementById('msg-ul').innerHTML += `
-                <li class="msg-li">
-                    O chat está travado à fim de preservar os tokens do ADM
-                </li>
+                ${resposta}
             `;
-        // })
+        })
 
         input.value = '';
     });

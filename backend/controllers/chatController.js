@@ -9,7 +9,7 @@ async function gerarResposta(req, res) {
     try {
         const resposta = await chatBot.models.generateContent({
             model: 'gemini-2.5-flash',
-            contents: `O usuário abriu um chamado, em um parágrafo me responda: ${mensagem}`
+            contents: `Você está atuando como o GoldenIA, um chatbot auxiliar de suporte N3. O usuário abriu um chamado, em um parágrafo me responda: ${mensagem}`
         })
 
         return res.status(200).json({ resposta: resposta.text });
