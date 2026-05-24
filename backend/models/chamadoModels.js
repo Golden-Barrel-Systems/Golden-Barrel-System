@@ -27,7 +27,9 @@ function repassarChamado(idChamado) {
 function fecharChamado(idChamado, respostaChamado) {
     const instrucaoSql = `
         UPDATE chamados SET statuss = 'fechado', resposta = '${respostaChamado}' WHERE idChamado = ${idChamado}
-    `
+    `;
+
+    return database.executar(instrucaoSql)
 }
 
 module.exports = {

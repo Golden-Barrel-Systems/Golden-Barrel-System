@@ -7,4 +7,12 @@ router.post('/buscar', (req, res) => {
     chamadoController.buscarChamados(req, res)
 });
 
+router.post('/repassar', (req, res) => {
+    chamadoController.repassarChamado(req, res)
+});
+
+router.post('/responder', (req, res) => {
+    chamadoController.responderChamado(req, res)
+});
+
 module.exports = router;
