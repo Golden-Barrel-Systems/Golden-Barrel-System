@@ -1,7 +1,9 @@
 const chamadoModel = require('../models/chamadoModels')
 
 async function buscarChamados(req, res) {
-    const nivelSuporte = req.body.usuario.nivelSuporte;
+    const tipoUsuario = req.usuario.tipoUsuario;
+
+    const nivelSuporte = tipoUsuario.split('_')[1]
     // const nivelSuporte = 3;
 
     try {

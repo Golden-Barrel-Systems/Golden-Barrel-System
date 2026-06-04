@@ -19,10 +19,10 @@ function cadastrar(codEmpresa, senha, tipoUsuario, cpf, email) {
 function buscarUsuario(email, senha) {
 
     const instrucaoSQL = `
-        SELECT idUsuario, codEmpresa, tipoUsuario, cpf, email
+        SELECT idUsuario, codEmpresa, tipoUsuario, cpf, email, senha
         FROM usuario
         WHERE (email = '${email}'
-           OR cpf = '${email}') AND senha = ${senha};
+           OR cpf = '${email}') AND senha = '${senha}';
     `;
 
     return database.executar(instrucaoSQL);

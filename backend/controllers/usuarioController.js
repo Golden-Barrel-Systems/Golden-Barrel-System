@@ -49,7 +49,7 @@ function autenticarUsuario(req, res) {
         function (resultadoAutenticar){
             if (resultadoAutenticar.length === 1){
 
-                if(resultadoAutenticar[0].password !== senha) return res.status(401).json({ mensagem: "Senha inválida" })
+                if(resultadoAutenticar[0].senha !== senha) return res.status(401).json({ mensagem: "Senha inválida" })
                 
                 const usuario = resultadoAutenticar[0];
                 
@@ -57,7 +57,7 @@ function autenticarUsuario(req, res) {
                 const vidaToken = 4 * 60 * 60 * 1000;
                 
                 userUtils.sessoes[token] = {
-                    userId: usuario.idUsuario,
+                    idUsuario: usuario.idUsuario,
                     codEmpresa: usuario.codEmpresa,
                     tipoUsuario: usuario.tipoUsuario,
                     cpf: usuario.cpf || "Sem CPF",

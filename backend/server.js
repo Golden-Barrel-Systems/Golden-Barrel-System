@@ -22,6 +22,7 @@ const chatRouter = require("./routes/chatRoutes");
 const chamadosRouter = require("./routes/chamadoRoutes");
 const camaraRouter = require("./routes/camaraRoutes");
 const sensorRouter = require("./routes/sensorRoutes");
+const usuarioRouter = require("./routes/usuarios");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -38,6 +39,7 @@ app.use("/chat", chatRouter);
 app.use("/chamado", chamadosRouter);
 app.use("/camara", camaraRouter);
 app.use("/sensor", sensorRouter);
+app.use("/usuario", usuarioRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://${HOST_APP}:${PORTA_APP}`)
