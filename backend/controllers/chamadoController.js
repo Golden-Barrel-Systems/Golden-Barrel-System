@@ -13,7 +13,11 @@ async function buscarChamados(req, res) {
             return res.status(200).json("Nenhum chamado encontrado para suporte nivel: " + nivelSuporte);
         };
 
-        return res.status(200).json(chamados);
+        let permission = false;
+
+        if (nivelSuporte === 3) permission = true;
+
+        return res.status(200).json({chamados: chamados, agent: permission});
     } catch (error) {
         console.log(error);
         return res.status(500).json({ erro: error.sqlMessage });
@@ -22,6 +26,7 @@ async function buscarChamados(req, res) {
 
 async function repassarChamado(req, res) {
     const id = req.body.id;
+    
 
     try {
         const repassou = await chamadoModel.repassarChamado(id);
