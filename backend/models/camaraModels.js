@@ -1,6 +1,6 @@
 const database = require("../database/config");
 
-function listarCamara(idEmpresa) {
+function listarCamara(codEmpresa) {
 
     let instrucaoSql = `
         SELECT
@@ -11,7 +11,7 @@ function listarCamara(idEmpresa) {
             idEmpresa,
             endereco
         FROM camara 
-        WHERE idEmpresa = ${idEmpresa};
+        WHERE codEmpresa = ${codEmpresa};
     `;
 
     return database.executar(instrucaoSql);

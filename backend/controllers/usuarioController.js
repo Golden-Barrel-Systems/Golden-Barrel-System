@@ -1,3 +1,6 @@
+const usuarioModel = require('../models/usuarioModels');
+const userUtils = require('../utils/userMiddleware')
+
 function cadastrar(req, res) {
     // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
     var codigo = req.body.codigoServer;
@@ -37,7 +40,44 @@ function cadastrar(req, res) {
     }
 }
 
+function autenticarUsuario(req, res) {
+    const email = req.body.email;
+    const senha = req.body.senha;
+
+    usuarioModel.buscarUsuario(email, senha)
+    .then(
+        function (resultadoAutenticar){
+            if (resultadoAutenticar.length === 1){
+
+                if(resultadoAutenticar[0].password !== senha) return res.status(401).json({ mensagem: "Email e/ou senha inválidos" })
+                
+                const usuario = resultadoAutenticar[0];
+                
+                const token = userUtils.gerarToken()
+                const vidaToken = 4 * 60 * 60 * 1000;
+                
+                userUtils.sessoes[token] = {
+                    userId: usuario.id,
+                    nome: usuario.name,
+                    email: usuario.email,
+                    criadoEm: new Date(),
+                    expiraEm: new Date(Date.now() + vidaToken)
+                }
+                res.status(200).json({ token })
+            } else {
+                console.log('Email e/ou senha inválidos!')
+                res.status(401).json({ mensagem: "Email e/ou senha inválidos"})
+            }
+        }
+    ).catch(
+        function (erro) {
+            console.log(erro)
+            res.status(500, erro.sqlMessage)
+        }
+    )
+};
+
 module.exports = {
-    autenticar,
+    autenticarUsuario,
     cadastrar
 }

@@ -1,16 +1,16 @@
 const chamadoCamara = require('../models/camaraModels')
 
 async function listarCamara(req, res) {
-    const idEmpresa = req.body.idEmpresa;
+    const codEmpresa = req.body.codEmpresa;
 
-    const camara = await chamadoCamara.listarCamara(idEmpresa);
+    const camara = await chamadoCamara.listarCamara(codEmpresa);
 
     let pegarItens = {
         IDCamara: camara.idCamara,
         NomeCamara: camara.nomeCamara,
         Temperatura: camara.temperaturaIdeal,
         Umidade: camara.umidadeIdeal,
-        IDempresa: idEmpresa,
+        codEmpresa: codEmpresa,
         IDendereco: camara.endereco
     };
 
