@@ -1,7 +1,7 @@
 const sensorModel = require('../models/sensorModels')
 
 async function dadosSensor(req, res) {
-    const idCamara = req.usuario.idCamara
+    const idCamara = req.body.idCamara
     try {
         const data = await sensorModel.buscarDadosSensor(idCamara);
 

@@ -9,9 +9,11 @@ loginBtn.addEventListener('click', () => {
     
     .then(resposta => {
         const token = resposta.token;
+        const codigo = resposta.codigo;
         const tipoUsuario = resposta.tipoUsuario;
 
         localStorage.setItem("token", token);
+        sessionStorage.setItem("codEmpresa", codigo)
         
         if (tipoUsuario.startsWith('suporte')) {
             window.location.href="./suporte.html"

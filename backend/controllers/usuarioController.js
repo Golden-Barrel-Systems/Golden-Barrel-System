@@ -69,7 +69,7 @@ function autenticarUsuario(req, res) {
                 }
 
                 console.log(userUtils.sessoes)
-                res.status(200).json({ token: token, tipoUsuario: usuario.tipoUsuario })
+                res.status(200).json({ token: token, tipoUsuario: usuario.tipoUsuario, codigo: usuario.codEmpresa })
             } else {
                 console.log('Email e/ou senha inválidos!')
                 res.status(401).json({ mensagem: "Email e/ou senha inválidos"})

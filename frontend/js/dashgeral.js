@@ -1,17 +1,33 @@
-import { pegarDados } from "./sensorfatch.js";
+import { listarCamaras, pegarDados } from "./sensorfatch.js";
+
+const selectCamaras = document.getElementById('selectCamaras')
+
+const Glinha = document.getElementById('graficLine');
+const Gbar = document.getElementById('graficBar');
 
     async function dados() {
         const token = localStorage.getItem("token")
-        const data = await pegarDados(token)
-        console.log(data)
+        const data = await listarCamaras(token)
 
         return data
     };
 
-    const data = dados();
-    
-    const Glinha = document.getElementById('graficLine');
-    const Gbar = document.getElementById('graficBar');
+    async function popularSelect() {
+        const array = await dados();
+
+        let mensagem = '';
+
+        for (let i = 0; i < array.length; i++) {
+            const camara = array[i]
+            mensagem += `
+                <option value="${camara}">Câmara ${i+1}</option>
+            `;
+        }
+
+        selectCamaras.innerHTML = mensagem
+    };
+
+    popularSelect()
 
     let graficoTemperatura = null;
     let graficoUmidade = null;

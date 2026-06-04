@@ -16,3 +16,22 @@ export async function pegarDados(token) {
         throw new Error(error)
     };
 }
+
+export async function listarCamaras(token) {
+    try{
+        const resposta = await fetch('http://localhost:8080/camara/todas', {
+
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        const data = await resposta.json()
+        return data;
+        
+    }
+    catch (error) {
+        throw new Error(error)
+    };
+}
