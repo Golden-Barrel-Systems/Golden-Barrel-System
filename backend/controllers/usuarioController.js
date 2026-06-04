@@ -43,13 +43,15 @@ function cadastrar(req, res) {
 function autenticarUsuario(req, res) {
     const email = req.body.email;
     const senha = req.body.senha;
+    const codigo = req.body.codigo;
 
-    usuarioModel.buscarUsuario(email, senha)
+    usuarioModel.buscarUsuario(email, senha, codigo)
     .then(
         function (resultadoAutenticar){
             if (resultadoAutenticar.length === 1){
 
                 if(resultadoAutenticar[0].senha !== senha) return res.status(401).json({ mensagem: "Senha inválida" })
+                    else if (resultadoAutenticar[0].codEmpresa !== codigo) return res.status(401).json({ mensagem: "Código errado ou inválido" })
                 
                 const usuario = resultadoAutenticar[0];
                 
@@ -67,7 +69,7 @@ function autenticarUsuario(req, res) {
                 }
 
                 console.log(userUtils.sessoes)
-                res.status(200).json({ token })
+                res.status(200).json({ token: token, tipoUsuario: usuario.tipoUsuario })
             } else {
                 console.log('Email e/ou senha inválidos!')
                 res.status(401).json({ mensagem: "Email e/ou senha inválidos"})

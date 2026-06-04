@@ -1,7 +1,8 @@
 import { pegarDados } from "./sensorfatch.js";
 
     async function dados() {
-        const data = await pegarDados(1)
+        const token = localStorage.getItem("token")
+        const data = await pegarDados(token)
         console.log(data)
 
         return data
