@@ -41,6 +41,7 @@ function popularSelect() {
                         <option value="${json[i].id_camara}">${json[i].camara}</option>
                     `
                 }
+                popularKpis();
             })
         })
         .catch(err => {
@@ -64,52 +65,45 @@ function popularKpis() {
 
                     fetch(`/sensor/temperaturaAtual/${json[i].id_sensor}`, {
                         method: "GET"
+                    }).then(res => {
+                        res.json().then(json => {
+                            temperaturaAtual[i] = json[0].valor;
+
+                            kpis.innerHTML += `
+                                <div class="kpi" id="statusTemperatura1">
+                                    <h3 style="color: black">SENSOR ${i + 1}</h3>
+                                    <center>Temperatura Atual</center>
+                                    <p id="kpiTemperatura2" style="color: black">${temperaturaAtual[i]}°C</p>
+                                    <div class="desc" style="color: black">
+                                        Ideal: ${Number(json[i].temperatura_ideal) - 1}°C e ${Number(json[i].temperatura_ideal) + 1}°C
+                                    </div>
+                                </div>
+                            `
+                        })
+                    }).catch(err => {
+                        console.log(err);
                     })
-                        .then(res => {
-                            res.json().then(json => {
-                                temperaturaAtual[i] = json[0].valor;
-                            })
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        })
 
                     fetch(`/sensor/umidadeAtual/${json[i].id_sensor}`, {
                         method: "GET"
+                    }).then(res => {
+                        res.json().then(json => {
+                            umidadeAtual[i] = json[0].valor;
+
+                            kpis.innerHTML += `
+                                <div class="kpi" id="statusUmidade1">
+                                    <h3 style="color: black">SENSOR ${i + 1}</h3>
+                                    <center>Umidade Atual</center>
+                                    <p id="kpiUmidade1" style="color: black">${umidadeAtual[i]}%</p>
+                                    <div class="desc" style="color: black">
+                                        Ideal: ${Number(json[i].umidade_ideal) - 1}°C e ${Number(json[i].umidade_ideal) + 1}°C
+                                    </div>
+                                </div>
+                             `
+                        })
+                    }).catch(err => {
+                        console.log(err);
                     })
-                        .then(res => {
-                            res.json().then(json => {
-                                umidadeAtual[i] = json[0].valor;
-                            })
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        })
-
-
-                    setTimeout(() => {
-                        kpis.innerHTML += `
-                            <div class="kpi" id="statusUmidade1">
-                                <h3 style="color: black">SENSOR ${i + 1}</h3>
-                                <center>Umidade Atual</center>
-                                <p id="kpiUmidade1" style="color: black">${umidadeAtual[i]}%</p>
-                                <div class="desc" style="color: black">
-                                    Ideal: ${Number(json[i].umidade_ideal) - 1}°C e ${Number(json[i].umidade_ideal) + 1}°C
-                                </div>
-                            </div>
-
-                            <div class="kpi" id="statusTemperatura1">
-                                <h3 style="color: black">SENSOR ${i + 1}</h3>
-                                <center>Temperatura Atual</center>
-                                <p id="kpiTemperatura2" style="color: black">${temperaturaAtual[i]}°C</p>
-                                <div class="desc" style="color: black">
-                                    
-                                    Ideal: ${Number(json[i].temperatura_ideal) - 1}°C e ${Number(json[i].temperatura_ideal) + 1}°C
-                                </div>
-                            </div>
-                        `
-                    }, 500);
-
                 }
             })
         })
@@ -117,12 +111,6 @@ function popularKpis() {
             console.log(err);
         })
 }
-
-setTimeout(() => {
-    popularKpis();
-}, 500);
-
-
 
 let graficoTemperatura = null;
 let graficoUmidade = null;
