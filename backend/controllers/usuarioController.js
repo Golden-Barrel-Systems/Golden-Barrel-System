@@ -39,47 +39,54 @@ function cadastrar(req, res) {
 }
 
 function autenticarUsuario(req, res) {
-    const email = req.body.email;
-    const senha = req.body.senha;
-    const codigo = req.body.codigo;
+  const email = req.body.email;
+  const senha = req.body.senha;
+  const codigo = req.body.codigo;
 
-    usuarioModel.buscarUsuario(email, senha, codigo)
-    .then(
-        function (resultadoAutenticar){
-            if (resultadoAutenticar.length === 1){
+  usuarioModel
+    .buscarUsuario(email, senha, codigo)
+    .then(function (resultadoAutenticar) {
+      if (resultadoAutenticar.length === 1) {
+        if (resultadoAutenticar[0].senha !== senha)
+          return res.status(401).json({ mensagem: "Senha inválida" });
+        else if (resultadoAutenticar[0].codigo_empresa !== codigo)
+          return res
+            .status(401)
+            .json({ mensagem: "Código errado ou inválido" });
 
-                if(resultadoAutenticar[0].senha !== senha) return res.status(401).json({ mensagem: "Senha inválida" })
-                    else if (resultadoAutenticar[0].codEmpresa !== codigo) return res.status(401).json({ mensagem: "Código errado ou inválido" })
-                
-                const usuario = resultadoAutenticar[0];
-                
-                const token = userUtils.gerarToken()
-                const vidaToken = 4 * 60 * 60 * 1000;
-                
-                userUtils.sessoes[token] = {
-                    idUsuario: usuario.idUsuario,
-                    codEmpresa: usuario.codEmpresa,
-                    tipoUsuario: usuario.tipoUsuario,
-                    cpf: usuario.cpf || "Sem CPF",
-                    email: usuario.email || "Sem email",
-                    criadoEm: new Date(),
-                    expiraEm: new Date(Date.now() + vidaToken)
-                }
+        const usuario = resultadoAutenticar[0];
 
-                console.log(userUtils.sessoes)
-                res.status(200).json({ token: token, tipoUsuario: usuario.tipoUsuario, codigo: usuario.codEmpresa })
-            } else {
-                console.log('Email e/ou senha inválidos!')
-                res.status(401).json({ mensagem: "Email e/ou senha inválidos"})
-            }
-        }
-    ).catch(
-        function (erro) {
-            console.log(erro)
-            res.status(500, erro.sqlMessage)
-        }
-    )
-};
+        const token = userUtils.gerarToken();
+        const vidaToken = 4 * 60 * 60 * 1000;
+
+        userUtils.sessoes[token] = {
+          id_usuario: usuario.id_usuario,
+          codigo_empresa: usuario.codigo_empresa,
+          tipo: usuario.tipo,
+          cpf: usuario.cpf || "Sem CPF",
+          email: usuario.email || "Sem email",
+          criadoEm: new Date(),
+          expiraEm: new Date(Date.now() + vidaToken),
+        };
+
+        console.log(userUtils.sessoes);
+        res
+          .status(200)
+          .json({
+            token: token,
+            tipo: usuario.tipo,
+            codigo: usuario.codigo_empresa,
+          });
+      } else {
+        console.log("Email e/ou senha inválidos!");
+        res.status(401).json({ mensagem: "Email e/ou senha inválidos" });
+      }
+    })
+    .catch(function (erro) {
+      console.log(erro);
+      res.status(500, erro.sqlMessage);
+    });
+}
 
 module.exports = {
     autenticarUsuario,

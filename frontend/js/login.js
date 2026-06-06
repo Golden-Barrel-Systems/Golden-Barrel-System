@@ -10,10 +10,11 @@ loginBtn.addEventListener('click', () => {
     .then(resposta => {
         const token = resposta.token;
         const codigo = resposta.codigo;
-        const tipoUsuario = resposta.tipoUsuario;
+        const tipoUsuario = resposta.tipo;
+        
 
         localStorage.setItem("token", token);
-        sessionStorage.setItem("codEmpresa", codigo)
+        sessionStorage.setItem("codigo_empresa", codigo)
         
         if (tipoUsuario.startsWith('suporte')) {
             window.location.href="./suporte.html"
@@ -27,7 +28,7 @@ loginBtn.addEventListener('click', () => {
 
 async function autenticarUsuario(email, senha, codigo) {
     try {
-        const resposta = await fetch('http://localhost:8080/usuario/autenticar', {
+        const resposta = await fetch('/usuarios/autenticar', {
             method: "POST",
             headers: {
                 "Content-Type" : "application/json"

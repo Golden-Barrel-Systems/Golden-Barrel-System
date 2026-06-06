@@ -43,7 +43,7 @@ app.use("/chat", chatRouter);
 app.use("/chamado", chamadosRouter);
 app.use("/camara", camaraRouter);
 app.use("/sensor", sensorRouter);
-app.use("/usuario", usuarioRouter);
+app.use("/usuarios", usuarioRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://${HOST_APP}:${PORTA_APP}`)
