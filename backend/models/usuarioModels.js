@@ -11,16 +11,15 @@ function cadastrar(codigoEmpresa, senha, tipo, cpf, email) {
   return database.executar(instrucaoSQL);
 }
 
-function buscarUsuario(email, senha, codEmpresa) {
-
-    const instrucaoSQL = `
-        SELECT idUsuario, codEmpresa, tipoUsuario, cpf, email, senha
+function buscarUsuario(email, senha, codigo_empresa) {
+  const instrucaoSQL = `
+        SELECT id_usuario, codigo_empresa, tipo, cpf, email, senha
         FROM usuario
         WHERE (email = '${email}'
-           OR cpf = '${email}') AND senha = '${senha}' AND codEmpresa = '${codEmpresa}';
+           OR cpf = '${email}') AND senha = '${senha}' AND codigo_empresa = '${codigo_empresa}';
     `;
 
-    return database.executar(instrucaoSQL);
+  return database.executar(instrucaoSQL);
 }
 
 module.exports = {
