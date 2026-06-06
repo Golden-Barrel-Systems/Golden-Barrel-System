@@ -1,9 +1,9 @@
 const sensorModel = require('../models/sensorModels')
 
 async function dadosSensor(req, res) {
-    const idCamara = req.body.idCamara
+    const id_camara = req.body.id_camara
     try {
-        const data = await sensorModel.buscarDadosSensor(idCamara);
+        const data = await sensorModel.buscarDadosSensor(id_camara);
 
         if(data.length <= 0) {
             return res.status(404).json({ mensagem: "Nenhum sensor encontrado" })
@@ -16,6 +16,24 @@ async function dadosSensor(req, res) {
     }
 };
 
+function temperaturaAtual(req, res) {
+    var idSensor = req.params.idSensor;
+
+    sensorModel.temperaturaAtual(idSensor).then((resultado) => {
+        res.status(200).json(resultado);
+    });
+}
+
+function umidadeAtual(req, res) {
+    var idSensor = req.params.idSensor;
+
+    sensorModel.umidadeAtual(idSensor).then((resultado) => {
+        res.status(200).json(resultado);
+    });
+}
+
 module.exports = {
-    dadosSensor
+    dadosSensor,
+    temperaturaAtual,
+    umidadeAtual
 }

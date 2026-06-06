@@ -1,125 +1,95 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-
-<head>
-    <link rel="shortcut icon" href="assets/img/logo.png" type="image/x-icon">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <link rel="shortcut icon" href="assets/img/logo.png" type="image/x-icon" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DashBoard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="./assets/css/dashboard.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-</head>
-
-<body>
-
+  <body>
     <div class="sidebar">
-        <div class="logo">
-            <img src="./assets/img/logo.png" alt="">
-            <h2>Golden Barrel</h2>
-        </div>
+      <div class="logo">
+        <img src="./assets/img/logo.png" alt="" />
+        <h2>Golden Barrel</h2>
+      </div>
 
-        <div class="menu">
-            <button class="btn" onclick="location.href='./dashGeral.html'">Dashboard Geral</button>
-            <button class="btn" onclick="location.href='./dashEspecifica.html'">Dashboard Específica</button>
-        </div>
+      <div class="menu">
+        <button class="btn" onclick="location.href = './dashGeral.html'">
+          Dashboard Geral
+        </button>
+        <button class="btn" onclick="location.href = './dashEspecifica.html'">
+          Dashboard Específica
+        </button>
+      </div>
 
-        <button class="btn" onclick="window.location = 'login.html'">Sair</button>
+      <button class="btn" onclick="window.location = 'login.html'">Sair</button>
     </div>
 
     <main class="dash">
-
-        <div class="selects">
-
-            <div class="camara SelecaoSelects">
-                <h3>Selecionar Câmara</h3>
-                <p>Escolha a câmara que deseja acompanhar no momento.</p>
-                <select id="selectCamaras">
-                    <option value="1">Câmara 1</option>
-                    <option value="2">Câmara 2</option>
-                </select>
-
-            </div>
-
-            <div class="kpiResumo">
-                <h3>Visão atual</h3>
-                <p id="resumoPainel">Câmara 1</p>
-            </div>
-
+      <div class="selects">
+        <div class="camara SelecaoSelects">
+          <h3>Selecionar Câmara</h3>
+          <p>Escolha a câmara que deseja acompanhar no momento.</p>
+          <select id="selectCamaras"></select>
         </div>
 
-        <div class="kpis">
+        <div class="kpiResumo">
+          <h3>Visão atual</h3>
+          <p id="resumoPainel">Câmara 1</p>
+        </div>
+      </div>
 
-            <div class="kpi" id="statusUmidade1">
-                <h3 style="color: white;">SENSOR 1</h3>
-                <p id="kpiUmidade1" style="color: white;"> 76 %</p>
-                <div class="desc" style="color: white;">Umidade atual do sensor 1 <br> Ideal é entre 64% e 66%</div>
+      <div class="kpis" id="kpis">
+        
+
+        <div class="kpi" id="statusCamara">
+          <h3>Status Camara</h3>
+          <p id="kpiStatusCamara">Normal</p>
+          <div class="desc">
+            Condição atual da câmara de acordo com temperatura e umidade
+          </div>
+        </div>
+      </div>
+
+      <div class="graficosArea">
+        <div class="grafics">
+          <div class="Glinhas">
+            <h2>Histórico Umidade da Câmara durante o dia</h2>
+            <p>Medições da umidade da câmara nas ultimas horas.</p>
+            <div class="graficoTam">
+              <canvas id="graficLine"></canvas>
             </div>
+          </div>
 
-            <div class="kpi" id="statusTemperatura1">
-                <h3 style="color: white;">SENSOR 1</h3>
-                <p id="kpiTemperatura1" style="color: white;"> 25 °C</p>
-                <div class="desc" style="color: white;">Temperatura atual do sensor 1 <br> Ideal é entre 17°C e 19°C</div>
+          <div class="Glinhas">
+            <h2>Histórico Temperatura da Câmara durante o dia</h2>
+            <p>Medições da temperatura da câmara nas ultimas horas.</p>
+            <div class="graficoTam">
+              <canvas id="graficBar"></canvas>
             </div>
-
-            <div class="kpi" id="statusUmidade2">
-                <h3 style="color: white;">SENSOR 2</h3>
-                <p id="kpiUmidade2" style="color: white;">74 %</p>
-                <div class="desc" style="color: white;">Umidade atual do sensor 2 <br> Ideal é entre 64% e 66%</div>
-            </div>
-
-            <div class="kpi" id="statusTemperatura2">
-                <h3 style="color: white;">SENSOR 2</h3>
-                <p id="kpiTemperatura2" style="color: white;"> 24 °C</p>
-                <div class="desc" style="color: white;">Temperatura atual do sensor 2 <br> Ideal é entre 17°C e 19°C </div>
-            </div>
-
-            <div class="kpi" id="statusCamara">
-                <h3>Status Camara</h3>
-                <p id="kpiStatusCamara">Normal </p>
-                <div class="desc">Condição atual da câmara de acordo com temperatura e umidade</div>
-            </div>
-
+          </div>
         </div>
 
-        <div class="graficosArea">
-
-            <div class="grafics">
-
-                <div class="Glinhas">
-                    <h2>Histórico Umidade da Câmara durante o dia</h2>
-                    <p>Medições da umidade da câmara nas ultimas horas.</p>
-                    <div class="graficoTam">
-
-                        <canvas id="graficLine"></canvas>
-                    </div>
-                </div>
-
-                <div class="Glinhas">
-                    <h2>Histórico Temperatura da Câmara durante o dia</h2>
-                    <p>Medições da temperatura da câmara nas ultimas horas.</p>
-                    <div class="graficoTam">
-
-                        <canvas id="graficBar"></canvas>
-                    </div>
-                </div>
-
-            </div>
-
-
-            <div class="alertas">
-                <h2>Alertas Recentes</h2>
-                <p>Ocorrências recentes de desvio da temperatura e umidade ideal na câmara.</p>
-                <div class="listaAlertas">
-                    <div id="listaAlertas"></div>
-                </div>
-            </div>
-
+        <div class="alertas">
+          <h2>Alertas Recentes</h2>
+          <p>
+            Ocorrências recentes de desvio da temperatura e umidade ideal na
+            câmara.
+          </p>
+          <div class="listaAlertas">
+            <div id="listaAlertas"></div>
+          </div>
         </div>
-
+      </div>
     </main>
 
     <script type="module" src="./js/dashgeral.js"></script>
-</body>
+  </body>
 </html>

@@ -5,148 +5,243 @@ const selectCamaras = document.getElementById('selectCamaras')
 const Glinha = document.getElementById('graficLine');
 const Gbar = document.getElementById('graficBar');
 
-    async function dados() {
-        const token = localStorage.getItem("token")
-        const data = await listarCamaras(token)
+// async function dados() {
+//     const token = localStorage.getItem("token")
+//     const data = await listarCamaras(token)
 
-        return data
-    };
+//     return data
+// };
 
-    async function popularSelect() {
-        const array = await dados();
+// async function popularSelect() {
+//     const array = await dados();
 
-        let mensagem = '';
+//     let mensagem = '';
 
-        for (let i = 0; i < array.length; i++) {
-            const camara = array[i]
-            mensagem += `
-                <option value="${camara}">Câmara ${i+1}</option>
-            `;
+//     for (let i = 0; i < array.length; i++) {
+//         const camara = array[i]
+//         mensagem += `
+//             <option value="${camara}">Câmara ${i+1}</option>
+//         `;
+//     }
+
+//     selectCamaras.innerHTML = mensagem
+// };
+
+// popularSelect();
+
+
+function popularSelect() {
+    fetch(`/camara/listar/${sessionStorage.codigo_empresa}`, {
+        method: "GET"
+    })
+        .then(res => {
+            res.json().then(json => {
+                for (let i = 0; i < json.length; i++) {
+                    selectCamaras.innerHTML += `
+                        <option value="${json[i].id_camara}">${json[i].camara}</option>
+                    `
+                }
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        })
+}
+
+popularSelect();
+
+var temperaturaAtual = [];
+var umidadeAtual = [];
+
+function popularKpis() {
+    fetch(`/camara/listarSensores/${selectCamaras.value}`, {
+        method: "GET"
+    })
+        .then(res => {
+            res.json().then(json => {
+
+                for (let i = 0; i < json.length; i++) {
+
+                    fetch(`/sensor/temperaturaAtual/${json[i].id_sensor}`, {
+                        method: "GET"
+                    })
+                        .then(res => {
+                            res.json().then(json => {
+                                temperaturaAtual[i] = json[0].valor;
+                            })
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+
+                    fetch(`/sensor/umidadeAtual/${json[i].id_sensor}`, {
+                        method: "GET"
+                    })
+                        .then(res => {
+                            res.json().then(json => {
+                                umidadeAtual[i] = json[0].valor;
+                            })
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+
+
+                    setTimeout(() => {
+                        kpis.innerHTML += `
+                            <div class="kpi" id="statusUmidade1">
+                                <h3 style="color: black">SENSOR ${i + 1}</h3>
+                                <center>Umidade Atual</center>
+                                <p id="kpiUmidade1" style="color: black">${umidadeAtual[i]}%</p>
+                                <div class="desc" style="color: black">
+                                    Ideal: ${Number(json[i].umidade_ideal) - 1}°C e ${Number(json[i].umidade_ideal) + 1}°C
+                                </div>
+                            </div>
+
+                            <div class="kpi" id="statusTemperatura1">
+                                <h3 style="color: black">SENSOR ${i + 1}</h3>
+                                <center>Temperatura Atual</center>
+                                <p id="kpiTemperatura2" style="color: black">${temperaturaAtual[i]}°C</p>
+                                <div class="desc" style="color: black">
+                                    
+                                    Ideal: ${Number(json[i].temperatura_ideal) - 1}°C e ${Number(json[i].temperatura_ideal) + 1}°C
+                                </div>
+                            </div>
+                        `
+                    }, 500);
+
+                }
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        })
+}
+
+setTimeout(() => {
+    popularKpis();
+}, 500);
+
+
+
+let graficoTemperatura = null;
+let graficoUmidade = null;
+
+let horarios = ["08:00", "08:15", "08:30", "08:45",
+    "09:00", "09:15", "09:30", "09:45",
+    "10:00", "10:15", "10:30", "10:45",
+    "11:00", "11:15", "11:30", "11:45",
+    "12:00"];
+
+let temperatura_ideal = 18;
+let umidade_ideal = 65;
+
+let tempIdealMin = temperatura_ideal - 1; // 17
+let tempIdealMax = temperatura_ideal + 1; // 19
+
+let umiIdealMin = umidade_ideal - 1; // 64
+let umiIdealMax = umidade_ideal + 1; // 66
+
+let tempAlertaMin = temperatura_ideal - 3; // 15
+let tempAlertaMax = temperatura_ideal + 3; // 21
+
+let umiAlertaMin = umidade_ideal - 3; // 62
+let umiAlertaMax = umidade_ideal + 3; // 68
+
+let sensor1_temperatura = [];
+let sensor1_umidade = [];
+
+let sensor2_temperatura = [];
+let sensor2_umidade = [];
+
+let ultimaTemperatura1 = '';
+let ultimaUmidade1 = '';
+
+let ultimaTemperatura2 = '';
+let ultimaUmidade2 = '';
+
+function carregarDados() {
+
+    let camaraSelecionada = Number(selectCamaras.value);
+
+    if (camaraSelecionada == 1) {
+
+        sensor1_temperatura = [17, 17, 17, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 18, 18];
+        sensor1_umidade = [66, 66, 65, 65, 65, 65, 64, 64, 64, 64, 64, 65, 65, 65, 65, 65, 65];
+
+        sensor2_temperatura = [17, 17, 18, 18, 18, 18, 18, 19, 19, 18, 18, 18, 18, 18, 18, 18, 18];
+        sensor2_umidade = [65, 65, 65, 65, 64, 64, 64, 64, 64, 64, 65, 65, 65, 65, 65, 65, 65];
+
+        ultimaTemperatura1 = sensor1_temperatura[sensor1_temperatura.length - 1];
+        ultimaUmidade1 = sensor1_umidade[sensor1_umidade.length - 1];
+
+        ultimaTemperatura2 = sensor2_temperatura[sensor2_temperatura.length - 1];
+        ultimaUmidade2 = sensor2_umidade[sensor2_umidade.length - 1];
+
+        const statusTemperatura1 = document.getElementById("statusTemperatura1");
+        const statusUmidade1 = document.getElementById("statusUmidade1");
+        const statusTemperatura2 = document.getElementById("statusTemperatura2");
+        const statusUmidade2 = document.getElementById("statusUmidade2");
+        const statusPosicaoSensor = document.getElementById("statusPosicaoSensor");
+        const statusQtdSensores = document.getElementById("statusQtdSensores");
+        const statusStatusSensor = document.getElementById("statusStatusSensor");
+
+        document.getElementById("kpiTemperatura1").innerHTML = `${ultimaTemperatura1} °C`;
+        document.getElementById("kpiUmidade1").innerHTML = `${ultimaUmidade1} %`;
+        document.getElementById("resumoPainel").innerHTML = `Câmara ${camaraSelecionada}`;
+        document.getElementById("kpiTemperatura2").innerHTML = `${ultimaTemperatura2} °C`;
+        document.getElementById("kpiUmidade2").innerHTML = `${ultimaUmidade2} %`;
+
+        if ((ultimaTemperatura1 < tempAlertaMin || ultimaTemperatura1 > tempAlertaMax) ||  // SENSOR 1 - temperatura critica
+            (ultimaUmidade1 < umiAlertaMin || ultimaUmidade1 > umiAlertaMax) ||             // SENSOR 1 - umidade critica
+            (ultimaTemperatura2 < tempAlertaMin || ultimaTemperatura2 > tempAlertaMax) ||   // SENSOR 2 - temperatura critica
+            (ultimaUmidade2 < umiAlertaMin || ultimaUmidade2 > umiAlertaMax)) {             // SENSOR 2 - umidade critica
+            document.getElementById("kpiStatusCamara").innerHTML = `<span style="color: red"><b>Crítico</b></span>`;    // algum sensor critico = câmara critica
+
+        } else if ((ultimaTemperatura1 < tempIdealMin || ultimaTemperatura1 > tempIdealMax) ||  // SENSOR 1 - temperatura alerta
+            (ultimaUmidade1 < umiIdealMin || ultimaUmidade1 > umiIdealMax) ||                   // SENSOR 1 - umidade alerta
+            (ultimaTemperatura2 < tempIdealMin || ultimaTemperatura2 > tempIdealMax) ||         // SENSOR 2 - temperatura alerta
+            (ultimaUmidade2 < umiIdealMin || ultimaUmidade2 > umiIdealMax)) {                  // SENSOR 2 - umidade alerta
+            document.getElementById("kpiStatusCamara").innerHTML = `<span style="color: orange"><b>Alerta</b></span>`;  // algum sensor alerta = câmara alerta
+
+        } else { // TDS os sensores ideais = câmara ideal
+            document.getElementById("kpiStatusCamara").innerHTML = `<span style="color: green"><b>Ideal</b></span>`;
         }
 
-        selectCamaras.innerHTML = mensagem
-    };
+        if (ultimaTemperatura1 > tempAlertaMax || ultimaTemperatura1 < tempAlertaMin) {
+            statusTemperatura1.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+        } else if (ultimaTemperatura1 > tempIdealMax || ultimaTemperatura1 < tempIdealMin) {
+            statusTemperatura1.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
+        } else {
+            statusTemperatura1.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
+        }
 
-    popularSelect()
+        if (ultimaUmidade1 > umiAlertaMax || ultimaUmidade1 < umiAlertaMin) {
+            statusUmidade1.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+        } else if (ultimaUmidade1 > umiIdealMax || ultimaUmidade1 < umiIdealMin) {
+            statusUmidade1.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
+        } else {
+            statusUmidade1.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
+        }
 
-    let graficoTemperatura = null;
-    let graficoUmidade = null;
+        if (ultimaTemperatura2 > tempAlertaMax || ultimaTemperatura2 < tempAlertaMin) {
+            statusTemperatura2.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+        } else if (ultimaTemperatura2 > tempIdealMax || ultimaTemperatura2 < tempIdealMin) {
+            statusTemperatura2.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
+        } else {
+            statusTemperatura2.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
+        }
 
-    let horarios = ["08:00", "08:15", "08:30", "08:45",
-        "09:00", "09:15", "09:30", "09:45",
-        "10:00", "10:15", "10:30", "10:45",
-        "11:00", "11:15", "11:30", "11:45",
-        "12:00"];
-
-    let temperaturaIdeal = 18;
-    let umidadeIdeal = 65;
-
-    let tempIdealMin = temperaturaIdeal - 1; // 17
-    let tempIdealMax = temperaturaIdeal + 1; // 19
-
-    let umiIdealMin = umidadeIdeal - 1; // 64
-    let umiIdealMax = umidadeIdeal + 1; // 66
-
-    let tempAlertaMin = temperaturaIdeal - 3; // 15
-    let tempAlertaMax = temperaturaIdeal + 3; // 21
-
-    let umiAlertaMin = umidadeIdeal - 3; // 62
-    let umiAlertaMax = umidadeIdeal + 3; // 68
-
-    let sensor1_temperatura = [];
-    let sensor1_umidade = [];
-
-    let sensor2_temperatura = [];
-    let sensor2_umidade = [];
-
-    let ultimaTemperatura1 = '';
-    let ultimaUmidade1 = '';
-
-    let ultimaTemperatura2 = '';
-    let ultimaUmidade2 = '';
-
-    function carregarDados() {
-
-        let camaraSelecionada = Number(selectCamaras.value);
-
-        if (camaraSelecionada == 1) {
-
-            sensor1_temperatura = [17, 17, 17, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 18, 18];
-            sensor1_umidade = [66, 66, 65, 65, 65, 65, 64, 64, 64, 64, 64, 65, 65, 65, 65, 65, 65];
-
-            sensor2_temperatura = [17, 17, 18, 18, 18, 18, 18, 19, 19, 18, 18, 18, 18, 18, 18, 18, 18];
-            sensor2_umidade = [65, 65, 65, 65, 64, 64, 64, 64, 64, 64, 65, 65, 65, 65, 65, 65, 65];
-
-            ultimaTemperatura1 = sensor1_temperatura[sensor1_temperatura.length - 1];
-            ultimaUmidade1 = sensor1_umidade[sensor1_umidade.length - 1];
-
-            ultimaTemperatura2 = sensor2_temperatura[sensor2_temperatura.length - 1];
-            ultimaUmidade2 = sensor2_umidade[sensor2_umidade.length - 1];
-
-            const statusTemperatura1 = document.getElementById("statusTemperatura1");
-            const statusUmidade1 = document.getElementById("statusUmidade1");
-            const statusTemperatura2 = document.getElementById("statusTemperatura2");
-            const statusUmidade2 = document.getElementById("statusUmidade2");
-            const statusPosicaoSensor = document.getElementById("statusPosicaoSensor");
-            const statusQtdSensores = document.getElementById("statusQtdSensores");
-            const statusStatusSensor = document.getElementById("statusStatusSensor");
-
-            document.getElementById("kpiTemperatura1").innerHTML = `${ultimaTemperatura1} °C`;
-            document.getElementById("kpiUmidade1").innerHTML = `${ultimaUmidade1} %`;
-            document.getElementById("resumoPainel").innerHTML = `Câmara ${camaraSelecionada}`;
-            document.getElementById("kpiTemperatura2").innerHTML = `${ultimaTemperatura2} °C`;
-            document.getElementById("kpiUmidade2").innerHTML = `${ultimaUmidade2} %`;
-
-            if ((ultimaTemperatura1 < tempAlertaMin || ultimaTemperatura1 > tempAlertaMax) ||  // SENSOR 1 - temperatura critica
-                (ultimaUmidade1 < umiAlertaMin || ultimaUmidade1 > umiAlertaMax) ||             // SENSOR 1 - umidade critica
-                (ultimaTemperatura2 < tempAlertaMin || ultimaTemperatura2 > tempAlertaMax) ||   // SENSOR 2 - temperatura critica
-                (ultimaUmidade2 < umiAlertaMin || ultimaUmidade2 > umiAlertaMax)) {             // SENSOR 2 - umidade critica
-                document.getElementById("kpiStatusCamara").innerHTML = `<span style="color: red"><b>Crítico</b></span>`;    // algum sensor critico = câmara critica
-
-            } else if ((ultimaTemperatura1 < tempIdealMin || ultimaTemperatura1 > tempIdealMax) ||  // SENSOR 1 - temperatura alerta
-                (ultimaUmidade1 < umiIdealMin || ultimaUmidade1 > umiIdealMax) ||                   // SENSOR 1 - umidade alerta
-                (ultimaTemperatura2 < tempIdealMin || ultimaTemperatura2 > tempIdealMax) ||         // SENSOR 2 - temperatura alerta
-                (ultimaUmidade2 < umiIdealMin || ultimaUmidade2 > umiIdealMax)) {                  // SENSOR 2 - umidade alerta
-                document.getElementById("kpiStatusCamara").innerHTML = `<span style="color: orange"><b>Alerta</b></span>`;  // algum sensor alerta = câmara alerta
-
-            } else { // TDS os sensores ideais = câmara ideal
-                document.getElementById("kpiStatusCamara").innerHTML = `<span style="color: green"><b>Ideal</b></span>`;
-            }
-
-            if(ultimaTemperatura1 > tempAlertaMax || ultimaTemperatura1 < tempAlertaMin) {
-                statusTemperatura1.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
-            } else if (ultimaTemperatura1 > tempIdealMax || ultimaTemperatura1 < tempIdealMin) {
-                statusTemperatura1.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
-            } else {
-                statusTemperatura1.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
-            }
-
-            if (ultimaUmidade1 > umiAlertaMax || ultimaUmidade1 < umiAlertaMin) {
-                statusUmidade1.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
-            } else if (ultimaUmidade1 > umiIdealMax || ultimaUmidade1 < umiIdealMin) {
-                statusUmidade1.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
-            } else {
-                statusUmidade1.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
-            }
-
-            if (ultimaTemperatura2 > tempAlertaMax || ultimaTemperatura2 < tempAlertaMin) {
-                statusTemperatura2.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
-            } else if (ultimaTemperatura2 > tempIdealMax || ultimaTemperatura2 < tempIdealMin) {
-                statusTemperatura2.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
-            } else {
-                statusTemperatura2.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
-            }
-
-            if (ultimaUmidade2 > umiAlertaMax || ultimaUmidade2 < umiAlertaMin) {
-                statusUmidade2.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
-            } else if (ultimaUmidade2 > umiIdealMax || ultimaUmidade2 < umiIdealMin) {
-                statusUmidade2.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
-            } else {
-                statusUmidade2.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
-            }
+        if (ultimaUmidade2 > umiAlertaMax || ultimaUmidade2 < umiAlertaMin) {
+            statusUmidade2.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+        } else if (ultimaUmidade2 > umiIdealMax || ultimaUmidade2 < umiIdealMin) {
+            statusUmidade2.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
+        } else {
+            statusUmidade2.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
+        }
 
 
-            listaAlertas.innerHTML = `
+        listaAlertas.innerHTML = `
 
             <div class="alertasAlerta">
             <h3>Temperatura em Alerta</h3>
@@ -159,84 +254,84 @@ const Gbar = document.getElementById('graficBar');
             </div>
      
      `
-        } else if (camaraSelecionada == 2) {
+    } else if (camaraSelecionada == 2) {
 
-            sensor1_temperatura = [18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23, 24, 24, 25, 25, 26];
-            sensor1_umidade = [66, 65, 65, 64, 64, 63, 63, 62, 62, 61, 61, 60, 60, 59, 59, 58, 58];
+        sensor1_temperatura = [18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23, 24, 24, 25, 25, 26];
+        sensor1_umidade = [66, 65, 65, 64, 64, 63, 63, 62, 62, 61, 61, 60, 60, 59, 59, 58, 58];
 
-            sensor2_temperatura = [18, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23, 24, 24, 25, 25];
-            sensor2_umidade = [65, 65, 64, 64, 63, 63, 62, 62, 61, 61, 60, 60, 59, 59, 58, 58, 57];
+        sensor2_temperatura = [18, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23, 24, 24, 25, 25];
+        sensor2_umidade = [65, 65, 64, 64, 63, 63, 62, 62, 61, 61, 60, 60, 59, 59, 58, 58, 57];
 
-            ultimaTemperatura1 = sensor1_temperatura[sensor1_temperatura.length - 1];
-            ultimaUmidade1 = sensor1_umidade[sensor1_umidade.length - 1];
+        ultimaTemperatura1 = sensor1_temperatura[sensor1_temperatura.length - 1];
+        ultimaUmidade1 = sensor1_umidade[sensor1_umidade.length - 1];
 
-            ultimaTemperatura2 = sensor2_temperatura[sensor2_temperatura.length - 1];
-            ultimaUmidade2 = sensor2_umidade[sensor2_umidade.length - 1];
+        ultimaTemperatura2 = sensor2_temperatura[sensor2_temperatura.length - 1];
+        ultimaUmidade2 = sensor2_umidade[sensor2_umidade.length - 1];
 
-            const statusTemperatura1 = document.getElementById("statusTemperatura1");
-            const statusUmidade1 = document.getElementById("statusUmidade1");
-            const statusTemperatura2 = document.getElementById("statusTemperatura2");
-            const statusUmidade2 = document.getElementById("statusUmidade2");
-            const statusPosicaoSensor = document.getElementById("statusPosicaoSensor");
-            const statusQtdSensores = document.getElementById("statusQtdSensores");
-            const statusStatusSensor = document.getElementById("statusStatusSensor");
+        const statusTemperatura1 = document.getElementById("statusTemperatura1");
+        const statusUmidade1 = document.getElementById("statusUmidade1");
+        const statusTemperatura2 = document.getElementById("statusTemperatura2");
+        const statusUmidade2 = document.getElementById("statusUmidade2");
+        const statusPosicaoSensor = document.getElementById("statusPosicaoSensor");
+        const statusQtdSensores = document.getElementById("statusQtdSensores");
+        const statusStatusSensor = document.getElementById("statusStatusSensor");
 
-            document.getElementById("kpiTemperatura1").innerHTML = `${ultimaTemperatura1} °C`;
-            document.getElementById("kpiUmidade1").innerHTML = `${ultimaUmidade1} %`;
-            document.getElementById("resumoPainel").innerHTML = `Câmara ${camaraSelecionada}`;
-            document.getElementById("kpiTemperatura2").innerHTML = `${ultimaTemperatura2} °C`;
-            document.getElementById("kpiUmidade2").innerHTML = `${ultimaUmidade2} %`;
+        document.getElementById("kpiTemperatura1").innerHTML = `${ultimaTemperatura1} °C`;
+        document.getElementById("kpiUmidade1").innerHTML = `${ultimaUmidade1} %`;
+        document.getElementById("resumoPainel").innerHTML = `Câmara ${camaraSelecionada}`;
+        document.getElementById("kpiTemperatura2").innerHTML = `${ultimaTemperatura2} °C`;
+        document.getElementById("kpiUmidade2").innerHTML = `${ultimaUmidade2} %`;
 
-            if ((ultimaTemperatura1 < tempAlertaMin || ultimaTemperatura1 > tempAlertaMax) ||  // SENSOR 1 - temperatura critica
-                (ultimaUmidade1 < umiAlertaMin || ultimaUmidade1 > umiAlertaMax) ||             // SENSOR 1 - umidade critica
-                (ultimaTemperatura2 < tempAlertaMin || ultimaTemperatura2 > tempAlertaMax) ||   // SENSOR 2 - temperatura critica
-                (ultimaUmidade2 < umiAlertaMin || ultimaUmidade2 > umiAlertaMax)) {             // SENSOR 2 - umidade critica
-                document.getElementById("kpiStatusCamara").innerHTML = `<span style="color: red"><b>Crítico</b></span>`;    // algum sensor critico = câmara critica
+        if ((ultimaTemperatura1 < tempAlertaMin || ultimaTemperatura1 > tempAlertaMax) ||  // SENSOR 1 - temperatura critica
+            (ultimaUmidade1 < umiAlertaMin || ultimaUmidade1 > umiAlertaMax) ||             // SENSOR 1 - umidade critica
+            (ultimaTemperatura2 < tempAlertaMin || ultimaTemperatura2 > tempAlertaMax) ||   // SENSOR 2 - temperatura critica
+            (ultimaUmidade2 < umiAlertaMin || ultimaUmidade2 > umiAlertaMax)) {             // SENSOR 2 - umidade critica
+            document.getElementById("kpiStatusCamara").innerHTML = `<span style="color: red"><b>Crítico</b></span>`;    // algum sensor critico = câmara critica
 
-            } else if ((ultimaTemperatura1 < tempIdealMin || ultimaTemperatura1 > tempIdealMax) ||  // SENSOR 1 - temperatura alerta
-                (ultimaUmidade1 < umiIdealMin || ultimaUmidade1 > umiIdealMax) ||                   // SENSOR 1 - umidade alerta
-                (ultimaTemperatura2 < tempIdealMin || ultimaTemperatura2 > tempIdealMax) ||         // SENSOR 2 - temperatura alerta
-                (ultimaUmidade2 < umiIdealMin || ultimaUmidade2 > umiIdealMax)) {                  // SENSOR 2 - umidade alerta
-                document.getElementById("kpiStatusCamara").innerHTML = `<span style="color: orange"><b>Alerta</b></span>`;  // algum sensor alerta = câmara alerta
+        } else if ((ultimaTemperatura1 < tempIdealMin || ultimaTemperatura1 > tempIdealMax) ||  // SENSOR 1 - temperatura alerta
+            (ultimaUmidade1 < umiIdealMin || ultimaUmidade1 > umiIdealMax) ||                   // SENSOR 1 - umidade alerta
+            (ultimaTemperatura2 < tempIdealMin || ultimaTemperatura2 > tempIdealMax) ||         // SENSOR 2 - temperatura alerta
+            (ultimaUmidade2 < umiIdealMin || ultimaUmidade2 > umiIdealMax)) {                  // SENSOR 2 - umidade alerta
+            document.getElementById("kpiStatusCamara").innerHTML = `<span style="color: orange"><b>Alerta</b></span>`;  // algum sensor alerta = câmara alerta
 
-            } else { // TDS os sensores ideais = câmara ideal
-                document.getElementById("kpiStatusCamara").innerHTML = `<span style="color: green"><b>Ideal</b></span>`;
-            }
+        } else { // TDS os sensores ideais = câmara ideal
+            document.getElementById("kpiStatusCamara").innerHTML = `<span style="color: green"><b>Ideal</b></span>`;
+        }
 
-            if(ultimaTemperatura1 > tempAlertaMax || ultimaTemperatura1 < tempAlertaMin) {
-                statusTemperatura1.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
-            } else if (ultimaTemperatura1 > tempIdealMax || ultimaTemperatura1 < tempIdealMin) {
-                statusTemperatura1.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
-            } else {
-                statusTemperatura1.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
-            }
+        if (ultimaTemperatura1 > tempAlertaMax || ultimaTemperatura1 < tempAlertaMin) {
+            statusTemperatura1.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+        } else if (ultimaTemperatura1 > tempIdealMax || ultimaTemperatura1 < tempIdealMin) {
+            statusTemperatura1.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
+        } else {
+            statusTemperatura1.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
+        }
 
-            if (ultimaUmidade1 > umiAlertaMax || ultimaUmidade1 < umiAlertaMin) {
-                statusUmidade1.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
-            } else if (ultimaUmidade1 > umiIdealMax || ultimaUmidade1 < umiIdealMin) {
-                statusUmidade1.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
-            } else {
-                statusUmidade1.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
-            }
+        if (ultimaUmidade1 > umiAlertaMax || ultimaUmidade1 < umiAlertaMin) {
+            statusUmidade1.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+        } else if (ultimaUmidade1 > umiIdealMax || ultimaUmidade1 < umiIdealMin) {
+            statusUmidade1.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
+        } else {
+            statusUmidade1.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
+        }
 
-            if (ultimaTemperatura2 > tempAlertaMax || ultimaTemperatura2 < tempAlertaMin) {
-                statusTemperatura2.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
-            } else if (ultimaTemperatura2 > tempIdealMax || ultimaTemperatura2 < tempIdealMin) {
-                statusTemperatura2.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
-            } else {
-                statusTemperatura2.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
-            }
+        if (ultimaTemperatura2 > tempAlertaMax || ultimaTemperatura2 < tempAlertaMin) {
+            statusTemperatura2.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+        } else if (ultimaTemperatura2 > tempIdealMax || ultimaTemperatura2 < tempIdealMin) {
+            statusTemperatura2.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
+        } else {
+            statusTemperatura2.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
+        }
 
-            if (ultimaUmidade2 > umiAlertaMax || ultimaUmidade2 < umiAlertaMin) {
-                statusUmidade2.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
-            } else if (ultimaUmidade2 > umiIdealMax || ultimaUmidade2 < umiIdealMin) {
-                statusUmidade2.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
-            } else {
-                statusUmidade2.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
-            }
+        if (ultimaUmidade2 > umiAlertaMax || ultimaUmidade2 < umiAlertaMin) {
+            statusUmidade2.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+        } else if (ultimaUmidade2 > umiIdealMax || ultimaUmidade2 < umiIdealMin) {
+            statusUmidade2.style.backgroundColor = "rgba(255, 165, 0, 0.5)";
+        } else {
+            statusUmidade2.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
+        }
 
 
-            listaAlertas.innerHTML = `
+        listaAlertas.innerHTML = `
 
     <div class="alertasAvisos">
     <h3>Temperatura Crítica</h3>
@@ -290,70 +385,70 @@ const Gbar = document.getElementById('graficBar');
      
  `
 
-        }
-
-        if (graficoTemperatura != null) {
-            graficoTemperatura.destroy();
-        }
-
-        if (graficoUmidade != null) {
-            graficoUmidade.destroy();
-        }
-
-        graficoUmidade = new Chart(Glinha, {
-            type: "line",
-            data: {
-                labels: horarios,
-                datasets: [{
-                    label: "Sensor 1 - Umidade (%)",
-                    data: sensor1_umidade,
-                    borderWidth: 2,
-                },
-                {
-                    label: "Sensor 2 - Umidade (%)",
-                    data: sensor2_umidade,
-                    borderWidth: 2,
-
-                }
-
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
-
-        graficoTemperatura = new Chart(Gbar, {
-            type: "line",
-            data: {
-                labels: horarios,
-                datasets: [{
-                    label: "Sensor 1 - Temperatura (°C)",
-                    data: sensor1_temperatura,
-                    borderWidth: 2,
-                },
-                {
-                    label: "Sensor 2 - Temperatura (°C)",
-                    data: sensor2_temperatura,
-                    borderWidth: 2,
-
-                }
-
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-
-
-        });
-
     }
 
+    if (graficoTemperatura != null) {
+        graficoTemperatura.destroy();
+    }
+
+    if (graficoUmidade != null) {
+        graficoUmidade.destroy();
+    }
+
+    graficoUmidade = new Chart(Glinha, {
+        type: "line",
+        data: {
+            labels: horarios,
+            datasets: [{
+                label: "Sensor 1 - Umidade (%)",
+                data: sensor1_umidade,
+                borderWidth: 2,
+            },
+            {
+                label: "Sensor 2 - Umidade (%)",
+                data: sensor2_umidade,
+                borderWidth: 2,
+
+            }
+
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    graficoTemperatura = new Chart(Gbar, {
+        type: "line",
+        data: {
+            labels: horarios,
+            datasets: [{
+                label: "Sensor 1 - Temperatura (°C)",
+                data: sensor1_temperatura,
+                borderWidth: 2,
+            },
+            {
+                label: "Sensor 2 - Temperatura (°C)",
+                data: sensor2_temperatura,
+                borderWidth: 2,
+
+            }
+
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
 
 
-    selectCamaras.addEventListener("change", carregarDados);
+    });
 
-    carregarDados();
+}
+
+
+
+// selectCamaras.addEventListener("change", carregarDados);
+
+// carregarDados();

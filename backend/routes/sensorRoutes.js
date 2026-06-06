@@ -8,4 +8,12 @@ router.post('/buscar', userUtils.autenticarSessao, (req, res) => {
     sensorController.dadosSensor(req, res)
 });
 
+router.get("/temperaturaAtual/:idSensor", function (req, res) {
+    sensorController.temperaturaAtual(req, res);
+});
+
+router.get("/umidadeAtual/:idSensor", function (req, res) {
+    sensorController.umidadeAtual(req, res);
+});
+
 module.exports = router

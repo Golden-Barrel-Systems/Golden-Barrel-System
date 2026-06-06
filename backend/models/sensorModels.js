@@ -1,9 +1,9 @@
 const express = require('express');
 const database = require('../database/config');
 
-function buscarDadosSensor(idCamara) {
+function buscarDadosSensor(id_camara) {
     const instrucaoSQL = `
-        SELECT s.idSensor, s.idCamara, s.localizacao, sm.fabricante, sm.modelo, sm.numSerial, sm.dataInstalacao, sm.dataCalibracao FROM sensor s LEFT JOIN sensor_meta sm ON s.idSensor = sm.idSensor WHERE s.idCamara = ${idCamara};
+        SELECT s.idSensor, s.id_camara, s.localizacao, sm.fabricante, sm.modelo, sm.numSerial, sm.dataInstalacao, sm.dataCalibracao FROM sensor s LEFT JOIN sensor_meta sm ON s.idSensor = sm.idSensor WHERE s.id_camara = ${id_camara};
     `;
 
     return database.executar(instrucaoSQL);
@@ -17,7 +17,21 @@ function buscarMedicoes(idSensor) {
     return database.executar(idSensor);
 };
 
+function temperaturaAtual(idSensor) {
+    var instrucaoSql = `select * from vw_temperatura_atual where id_sensor = ${idSensor};`;
+
+    return database.executar(instrucaoSql);
+}
+
+function umidadeAtual(idSensor) {
+    var instrucaoSql = `select * from vw_umidade_atual where id_sensor = ${idSensor};`;
+
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     buscarDadosSensor,
-    buscarMedicoes
+    buscarMedicoes,
+    temperaturaAtual,
+    umidadeAtual
 };

@@ -12,4 +12,12 @@ router.post('/dados', userUtils.autenticarSessao, (req, res) => {
     camaraController.listarCamara(req, res)
 })
 
+router.get("/listar/:codigoEmpresa", function (req, res) {
+    camaraController.listar(req, res);
+});
+
+router.get("/listarSensores/:idCamara", function (req, res) {
+    camaraController.listarSensores(req, res);
+});
+
 module.exports = router;
