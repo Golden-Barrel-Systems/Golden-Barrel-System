@@ -1,6 +1,6 @@
 export async function pegarDados(token) {
     try{
-        const resposta = await fetch('http://localhost:8080/sensor/buscar', {
+        const resposta = await fetch('/sensor/buscar', {
 
             method: "POST",
             headers: {
@@ -19,7 +19,7 @@ export async function pegarDados(token) {
 
 export async function listarCamaras(token) {
     try{
-        const resposta = await fetch('http://localhost:8080/camara/todas', {
+        const resposta = await fetch('/camara/todas', {
 
             method: "POST",
             headers: {
