@@ -1,4 +1,4 @@
-const ambiente_processo = 'producao';
+const ambiente_processo = 'desenvolvimento';
 
 const caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
 
@@ -26,6 +26,10 @@ const usuarioRouter = require("./routes/usuarios");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use(express.static(path.join(__dirname, "..", "frontend")));
+
+
 
 app.use(cors());
 
