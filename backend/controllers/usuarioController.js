@@ -1,41 +1,42 @@
-const usuarioModel = require('../models/usuarioModels');
-const userUtils = require('../utils/userMiddleware')
+const usuarioModel = require("../models/usuarioModels");
+const userUtils = require("../utils/userMiddleware");
 
 function cadastrar(req, res) {
-    // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
-    const codigo = req.body.codigo;
-    const email = req.body.email;
-    const senha = req.body.senha;
-    const cpf = req.body.cpf;
-    const tipoUsuario = req.body.tipoUsuario
-    
+  console.log("Cheguei no controler");
 
-    // Faça as validações dos valores
-    if (codigo == undefined) {
-        res.status(400).send("Seu codigo está undefined!");
-    } else if (email == undefined && cpf == undefined) {
-        res.status(400).send("Seu email e cpf estão undefined!");
-    } else if (senha == undefined) {
-        res.status(400).send("Sua senha está undefined!");
-    }else {
+  // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
+  const codigo = req.body.codigo_empresaServer;
+  const email = req.body.emailServer;
+  const senha = req.body.senhaServer;
+  const cpf = req.body.cpfServer;
+  const tipoUsuario = req.body.tipoUsuarioServer;
 
-        // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
-        usuarioModel.cadastrar(codigo,senha,tipoUsuario,cpf,email)
-            .then(
-                function (resultado) {
-                    res.json(resultado);
-                }
-            ).catch(
-                function (erro) {
-                    console.log(erro);
-                    console.log(
-                        "\nHouve um erro ao realizar o cadastro! Erro: ",
-                        erro.sqlMessage
-                    );
-                    res.status(500).json(erro.sqlMessage);
-                }
-            );
-    }
+  console.log(req.body);
+
+  // Faça as validações dos valores
+  if (codigo == undefined) {
+    res.status(400).send("Seu codigo está undefined!");
+  } else if (email == undefined && cpf == undefined) {
+    res.status(400).send("Seu email e cpf estão undefined!");
+  } else if (senha == undefined) {
+    res.status(400).send("Sua senha está undefined!");
+  } else {
+    // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
+
+    usuarioModel
+      .cadastrar(codigo, senha, tipoUsuario, cpf, email)
+      .then(function (resultado) {
+        res.json(resultado);
+      })
+      .catch(function (erro) {
+        console.log(erro);
+        console.log(
+          "\nHouve um erro ao realizar o cadastro! Erro: ",
+          erro.sqlMessage,
+        );
+        res.status(500).json(erro.sqlMessage);
+      });
+  }
 }
 
 function autenticarUsuario(req, res) {
@@ -89,6 +90,6 @@ function autenticarUsuario(req, res) {
 }
 
 module.exports = {
-    autenticarUsuario,
-    cadastrar
-}
+  autenticarUsuario,
+  cadastrar,
+};

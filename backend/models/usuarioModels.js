@@ -1,19 +1,14 @@
-const database = require('../database/config');
+const database = require("../database/config");
 
-function cadastrar(codEmpresa, senha, tipoUsuario, cpf, email) {
-
-    const instrucaoSQL = `
-        INSERT INTO usuario (codEmpresa, senha, tipoUsuario, cpf, email)
-        VALUES (
-            '${codEmpresa}',
-            '${senha}',
-            '${tipoUsuario}',
-            '${cpf}',
-            '${email}'
-        );
+function cadastrar(codigoEmpresa, senha, tipo, cpf, email) {
+  const instrucaoSQL = `
+        INSERT INTO 
+            usuario (email, senha, tipo, cpf, codigo_empresa)
+        VALUES 
+            ('${email}', '${senha}', '${tipo}', '${cpf}', '${codigoEmpresa}');
     `;
 
-    return database.executar(instrucaoSQL);
+  return database.executar(instrucaoSQL);
 }
 
 function buscarUsuario(email, senha, codEmpresa) {
@@ -29,6 +24,6 @@ function buscarUsuario(email, senha, codEmpresa) {
 }
 
 module.exports = {
-    cadastrar,
-    buscarUsuario
+  cadastrar,
+  buscarUsuario,
 };
