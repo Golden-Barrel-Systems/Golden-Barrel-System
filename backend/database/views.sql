@@ -33,14 +33,17 @@ CREATE VIEW vw_selecionar_sensores AS
 
 CREATE VIEW vw_umidade_atual AS
     SELECT 
+        medicao.data_hora,
         sensor.id_sensor,
         medicao.valor,
         medicao.tipo,
-        medicao.data_hora
+        camara.vw_umidade_atual
     FROM
         medicao
             JOIN
         sensor ON medicao.fk_sensor = sensor.id_sensor
+            JOIN
+        camara ON sensor.fk_camara = camara.id_camara
     WHERE
         medicao.tipo = 'umidade'
     ORDER BY medicao.data_hora DESC;
@@ -48,14 +51,17 @@ CREATE VIEW vw_umidade_atual AS
     
 CREATE VIEW vw_temperatura_atual AS
     SELECT 
+        medicao.data_hora,
         sensor.id_sensor,
         medicao.valor,
         medicao.tipo,
-        medicao.data_hora
+        camara.temperatura_ideal
     FROM
         medicao
             JOIN
         sensor ON medicao.fk_sensor = sensor.id_sensor
+            JOIN
+        camara ON sensor.fk_camara = camara.id_camara
     WHERE
         medicao.tipo = 'temperatura'
     ORDER BY medicao.data_hora DESC;
