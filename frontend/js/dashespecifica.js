@@ -22,7 +22,6 @@ const GlinhaU = document.getElementById("graficLineU");
 let graficoTemperatura = null;
 let graficoUmidade = null;
 
-// pegar dados do select da camara
 async function popularSelectCamara() {
   const camaras = await fetch(
     `/camara/listar/${sessionStorage.codigo_empresa}`,
@@ -38,7 +37,6 @@ async function popularSelectCamara() {
   }
 }
 
-// pegar dados do select do sensor
 async function popularSelectSensor() {
   const sensores = await fetch(`/camara/listarSensores/${selectCamaras.value}`);
 
@@ -53,7 +51,6 @@ async function popularSelectSensor() {
   }
 }
 
-// carregar os selects do sensor e camara
 async function carregarselects() {
   try {
     await popularSelectCamara();
@@ -71,19 +68,16 @@ async function carregarselects() {
 }
 carregarselects();
 
-// coletar dados para kpis
 async function coletarDados() {
   let sensorNome = "";
   let camaraNome = "";
   let sensorPosicao = "";
 
-  //dados camara
   const camaras = await fetch(
     `/camara/listar/${sessionStorage.codigo_empresa}`,
   );
   const jsonCameras = await camaras.json();
 
-  // dados sensores
   const sensores = await fetch(`/camara/listarSensores/${selectCamaras.value}`);
   const sensoresJson = await sensores.json();
 
@@ -119,7 +113,6 @@ async function coletarDados() {
   umiAlertaMin = umidadeIdeal - 3;
   umiAlertaMax = umidadeIdeal + 3;
 
-  // painel de resumo
   document.getElementById("resumoPainel").innerHTML =
     `${camaraNome} · ${sensorNome} - ${sensorPosicao}`;
 
@@ -127,7 +120,6 @@ async function coletarDados() {
   document.getElementById("kpiQtdSensores").innerHTML = cont;
 }
 
-// função para utilizar dados dos graficos
 async function buscarDadosGrafico() {
   const resposta = await fetch(
     `/sensor/ultimasMedicoes/${selectSensores.value}`,
@@ -137,17 +129,14 @@ async function buscarDadosGrafico() {
 
   console.log(dados);
 
-  // temperatura
   let labelsTemp = [];
   let dadosTemp = [];
 
-  //umidade
   let labelsUmi = [];
   let dadosUmi = [];
 
-  // separação dados do fetch das mediçoes
   for (let i = dados.length - 1; i >= 0; i--) {
-    let hora = dados[i].data_hora.substring(11, 16); // separar a hora do grafico em padrão ex: 11:00
+    let hora = dados[i].data_hora.substring(11, 16);
 
     if (dados[i].tipo == "temperatura") {
       labelsTemp.push(hora);
@@ -175,7 +164,6 @@ async function buscarDadosGrafico() {
   let ultimaTemperatura = dadosTemp[dadosTemp.length - 1];
   let ultimaUmidade = dadosUmi[dadosUmi.length - 1];
 
-  // grafico de temperatura
 
   if (graficoTemperatura != null) {
     graficoTemperatura.destroy();
@@ -200,7 +188,6 @@ async function buscarDadosGrafico() {
     },
   });
 
-  // grafico de umidade
 
   if (graficoUmidade != null) {
     graficoUmidade.destroy();
@@ -231,7 +218,6 @@ async function buscarDadosGrafico() {
   const statusQtdSensores = document.getElementById("statusQtdSensores");
   const statusStatusSensor = document.getElementById("statusStatusSensor");
 
-  // kpis de tem e umi
   document.getElementById("kpiTemperatura").innerHTML =
     `${ultimaTemperatura} °C`;
   document.getElementById("kpiUmidade").innerHTML = `${ultimaUmidade} %`;
@@ -242,7 +228,6 @@ async function buscarDadosGrafico() {
   document.getElementById("tempsidea").innerHTML =
     ` Temperatura Ideal é entre ${tempIdealMin}°C e ${tempIdealMax}°C `;
 
-  // verificações para verificar status da camara
   if (
     ultimaTemperatura < tempAlertaMin ||
     ultimaTemperatura > tempAlertaMax ||
@@ -254,7 +239,7 @@ async function buscarDadosGrafico() {
     ultimaUmidade > umiAlertaMax
   ) {
     document.getElementById("kpiStatusCamara").innerHTML =
-      `<span style="color: red"><b>Crítico</b></span>`; // algum sensor critico = câmara critica
+      `<span style="color: red"><b>Crítico</b></span>`;
   } else if (
     ultimaTemperatura < tempIdealMin ||
     ultimaTemperatura > tempIdealMax ||
@@ -266,15 +251,13 @@ async function buscarDadosGrafico() {
     ultimaUmidade > umiIdealMax
   ) {
     document.getElementById("kpiStatusCamara").innerHTML =
-      `<span style="color: orange"><b>Alerta</b></span>`; // algum sensor alerta = câmara alerta
+      `<span style="color: orange"><b>Alerta</b></span>`;
   } else {
-    // TDS os sensores ideais = câmara ideal
     document.getElementById("kpiStatusCamara").innerHTML =
       `<span style="color: green"><b>Ideal</b></span>`;
   }
 
   if (
-    // vericar status de temp/umi atual
     ultimaTemperatura >= tempIdealMin &&
     ultimaTemperatura <= tempIdealMax &&
     ultimaUmidade >= umiIdealMin &&
