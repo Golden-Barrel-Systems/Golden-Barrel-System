@@ -34,6 +34,16 @@ async function listarAlertasPorSensor(req, res) {
     }
 }
 
+function registrar(req, res) {
+    var idMedicao = req.body.idMedicaoServer;
+    var mensagem = req.body.mensagemServer;
+    var peso = req.body.pesoServer;
+
+    alertaModel.registrar(idMedicao, mensagem, peso).then((resultado) => {
+        res.status(200).json(resultado);
+    });
+}
+
 module.exports = {
-    listarAlertasPorSensor
+    registrar,
 }

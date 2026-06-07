@@ -78,8 +78,10 @@ function popularKpis() {
                                 color = 'rgba(0, 128, 0, 0.5)';
                             } else if (temperaturaAtual <= temperaturaCriticoMinimo || temperaturaAtual >= temperaturaCriticoMaximo) {
                                 color = 'rgba(255, 0, 0, 0.8)';
+                                // registrarAlerta(json[i].id_medicao, "Temperatura acima do ideal", "critico");
                             } else {
                                 color = 'rgba(255, 166, 0, 0.69)';
+                                // registrarAlerta(json[i].id_medicao, "Temperatura acima do ideal", "medio");
                             }
 
 
@@ -115,8 +117,10 @@ function popularKpis() {
                                 color = 'rgba(0, 128, 0, 0.5)';
                             } else if (umidadeAtual <= umidadeCriticoMinimo || umidadeAtual >= umidadeCriticoMaximo) {
                                 color = 'rgba(255, 0, 0, 0.8)';
+                                // registrarAlerta(json[i].id_medicao, "Umidade acima do ideal", "critico");
                             } else {
                                 color = 'rgba(255, 166, 0, 0.69)';
+                                // registrarAlerta(json[i].id_medicao, "Umidade acima do ideal", "medio");
                             }
 
                             kpis.innerHTML += `
@@ -135,6 +139,26 @@ function popularKpis() {
                     })
                 }
             })
+        })
+        .catch(err => {
+            console.log(err);
+        })
+}
+
+function registrarAlerta(idMedicao, mensagem, peso) {
+    fetch("/alerta/registrar", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            idMedicaoServer: idMedicao,
+            mensagemServer: mensagem,
+            pesoServer: peso,
+        }),
+    })
+        .then(res => {
+            exibirAlertas();
         })
         .catch(err => {
             console.log(err);
