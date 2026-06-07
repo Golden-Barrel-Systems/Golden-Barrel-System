@@ -1,7 +1,7 @@
 /* pag td */
 body {
   background: rgba(0, 111, 83, 0.2);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   margin: 0;
 }
 
@@ -90,8 +90,9 @@ h3 {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 10px;
-  border: 1px solid rgba(0, 111, 83, 0.10);
+  border: 1px solid rgba(0, 111, 83, 0.1);
 }
 
 .SelecaoSelects h3 {
@@ -103,7 +104,7 @@ h3 {
 
 .SelecaoSelects p {
   margin: 0;
-  font-size: 12px;
+  font-size: 15px;
   color: #5a6d67;
 }
 
@@ -159,7 +160,7 @@ h3 {
 
 .kpiResumo h3 {
   margin: 0;
-  color: rgba(255, 255, 255, 0.80);
+  color: rgba(255, 255, 255, 0.8);
   font-size: 14px;
   font-weight: 500;
 }
@@ -189,7 +190,6 @@ h3 {
   grid-template-columns: repeat(5, 1fr);
   gap: 16px;
   margin-bottom: 20px;
-
 }
 
 /*padrão kpis  */
@@ -214,13 +214,13 @@ h3 {
 .kpi p {
   font-size: 30px;
   font-weight: 700;
-  line-height: 36px;
+  line-height: 20px;
   text-align: center;
   color: rgb(6, 33, 26);
 }
 
 .kpi .desc {
-  font-size: 13px;
+  font-size: 17px;
   line-height: 18px;
   color: #70817d;
   text-align: center;
@@ -263,7 +263,7 @@ h3 {
 }
 
 .Glinhas p {
-  font-size: 10px;
+  font-size: 15px;
   font-weight: 400;
   margin-bottom: 20px;
   text-align: center;
@@ -306,7 +306,7 @@ h3 {
 }
 
 .alertas p {
-  font-size: 10px;
+  font-size: 15px;
   font-weight: 400;
   margin-bottom: 20px;
   text-align: center;
@@ -348,16 +348,30 @@ h3 {
   margin-bottom: 15px;
   border-left: 8px solid;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  border-left-color: #F58220;
+  border-left-color: #f58220;
 }
 
 .alertasmedio h3 {
   margin: 0;
   font-size: 18px;
-  color: #F58220;
+  color: #f58220;
 }
 
 .alertasmedio p {
+  margin: 8px 0 0 0;
+  color: #0d0d0d;
+}
+
+.alertasleve {
+  background-color: rgba(109, 132, 126, 0.2);
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-left: 8px solid;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  border-left-color: #f5ee20;
+}
+.alertasleve p {
   margin: 8px 0 0 0;
   color: #0d0d0d;
 }
