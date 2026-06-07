@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS medicao (
 
 CREATE TABLE IF NOT EXISTS alerta (
     id_alerta INT PRIMARY KEY AUTO_INCREMENT,
-    fk_medicao INT NOT NULL,
+    fk_medicao INT UNIQUE NOT NULL,
     data_hora DATETIME DEFAULT CURRENT_TIMESTAMP (),
     mensagem VARCHAR(60),
     peso VARCHAR(7),
