@@ -371,7 +371,35 @@ h3 {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   border-left-color: #f5ee20;
 }
+
+.alertasleve h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #f5ee20;
+}
+
 .alertasleve p {
+  margin: 8px 0 0 0;
+  color: #0d0d0d;
+}
+
+.alertascritico {
+  background-color: rgba(109, 132, 126, 0.2);
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-left: 8px solid;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  border-left-color: #ef1111;
+}
+
+.alertasleve h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #ef1111;
+}
+
+.alertascritico p {
   margin: 8px 0 0 0;
   color: #0d0d0d;
 }
