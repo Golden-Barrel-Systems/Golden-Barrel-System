@@ -40,9 +40,9 @@ INSERT INTO sensor_meta
 (fk_sensor, fabricante, modelo, numero_serial,
  data_instalacao, data_calibracao)
 VALUES
-(1, 'SensTech', 'ST-Temp-Umi-X1', 'SN123456789',
+(1, 'SensTech', 'ST-Temp-Umi-X1', 'SN124',
  '2025-01-10', '2025-06-01'),
-(2, 'SensTech', 'ST-Temp-Umi-X2', 'SN987654321',
+(2, 'SensTech', 'ST-Temp-Umi-X2', 'SN123',
  '2025-01-10', '2025-06-01');
 
 -- MEDICAO
