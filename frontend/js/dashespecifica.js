@@ -1,10 +1,6 @@
 const selectCamaras = document.getElementById("selectCamaras");
 const selectSensores = document.getElementById("selectSensores");
 
-let sensor_nome = "";
-let camara_nome = "";
-let sensor_posicao = "";
-
 let temperaturaIdeal = 0;
 let umidadeIdeal = 0;
 
@@ -26,284 +22,100 @@ const GlinhaU = document.getElementById("graficLineU");
 let graficoTemperatura = null;
 let graficoUmidade = null;
 
-function carregarDados() {
-  let camaraSelecionada = Number(selectCamaras.value);
-  let sensorSelecionado = Number(selectSensores.value);
+// Buscando e adicionando camaras e sensores direto do banco
 
-  let horarios = [];
-  let temperaturas = [];
-  let umidades = [];
-  let qtdSensores = 2;
+// pegar dados do select da camara
+async function popularSelectCamara() {
+  const camaras = await fetch(
+    `/camara/listar/${sessionStorage.codigo_empresa}`,
+  );
 
-  if (camaraSelecionada == 1 && sensorSelecionado == 1) {
-    let sensor1_horarios = [
-      "08:00",
-      "08:15",
-      "08:30",
-      "08:45",
-      "09:00",
-      "09:15",
-      "09:30",
-      "09:45",
-      "10:00",
-      "10:15",
-      "10:30",
-      "10:45",
-      "11:00",
-      "11:15",
-      "11:30",
-      "11:45",
-      "12:00",
-    ];
+  const jsonCameras = await camaras.json();
 
-    let sensor1_temperatura = [
-      17, 17, 17, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 18, 18,
-    ];
-    let sensor1_umidade = [
-      66, 66, 65, 65, 65, 65, 64, 64, 64, 64, 64, 65, 65, 65, 65, 65, 65,
-    ];
+  selectCamaras.innerHTML = "";
 
-    sensor_nome = "Sensor 1";
-    camara_nome = "Câmara 1";
-    sensor_posicao = "Frente";
+  for (let i = 0; i < jsonCameras.length; i++) {
+    selectCamaras.innerHTML += `
+     <option value="${jsonCameras[i].id_camara}">${jsonCameras[i].camara}</option> `;
+  }
+}
 
-    horarios = sensor1_horarios;
-    temperaturas = sensor1_temperatura;
-    umidades = sensor1_umidade;
+// pegar dados do select do sensor
+async function popularSelectSensor() {
+  const sensores = await fetch(`/camara/listarSensores/${selectCamaras.value}`);
 
-    listaAlertas.innerHTML = `
+  const sensoresJson = await sensores.json();
 
+  selectSensores.innerHTML = "";
 
-        `;
-  } else if (camaraSelecionada == 1 && sensorSelecionado == 2) {
-    let sensor2_horarios = [
-      "08:00",
-      "08:15",
-      "08:30",
-      "08:45",
-      "09:00",
-      "09:15",
-      "09:30",
-      "09:45",
-      "10:00",
-      "10:15",
-      "10:30",
-      "10:45",
-      "11:00",
-      "11:15",
-      "11:30",
-      "11:45",
-      "12:00",
-    ];
-    let sensor2_temperatura = [
-      17, 17, 18, 18, 18, 18, 18, 20, 19, 18, 18, 18, 18, 18, 18, 18, 18,
-    ];
-    let sensor2_umidade = [
-      65, 65, 65, 65, 64, 64, 64, 63, 64, 64, 65, 65, 65, 65, 65, 65, 65,
-    ];
+  for (let i = 0; i < sensoresJson.length; i++) {
+    console.log("Dados", sensoresJson);
+    selectSensores.innerHTML += `
+     <option value="${sensoresJson[i].id_sensor}"> Sensor ${sensoresJson[i].id_sensor} - ${sensoresJson[i].posicionamento}</option> `;
+  }
+}
 
-    sensor_nome = "Sensor 2";
-    camara_nome = "Câmara 1";
-    sensor_posicao = "Centro";
+// carregar os selects do sensor e camara
+async function carregarselects() {
+  try {
+    await popularSelectCamara();
+    console.log("resposta camara:", selectCamaras.value);
 
-    horarios = sensor2_horarios;
-    temperaturas = sensor2_temperatura;
-    umidades = sensor2_umidade;
+    await popularSelectSensor();
+    console.log("resposta sensor:", selectSensores.value);
 
-    listaAlertas.innerHTML = `
+    await coletarDados();
+  } catch (err) {
+    console.log(err);
+  }
+}
+carregarselects();
+carregarDados();
 
-            <div class="alertasAlerta">
-            <h3>Temperatura em Alerta</h3>
-            <p>Sensor 2 registrou 20°C às 09:45 (Alerta: 15°C até 17°C ou 19°C até 21°C).</p>
-            </div>
+// coletar dados para kpis
+async function coletarDados() {
+  let sensorNome = "";
+  let camaraNome = "";
+  let sensorPosicao = "";
 
-            <div class="alertasAlerta">
-            <h3>Umidade em Alerta</h3>
-            <p>Sensor 2 registrou 63% às 09:45 (Alerta: 62% até 64% ou 66% até 68%).</p>
-            </div>
+  //dados camara
+  const camaras = await fetch(
+    `/camara/listar/${sessionStorage.codigo_empresa}`,
+  );
+  const jsonCameras = await camaras.json();
 
-    `;
-  } else if (camaraSelecionada == 2 && sensorSelecionado == 1) {
-    let sensor1_horarios = [
-      "08:00",
-      "08:15",
-      "08:30",
-      "08:45",
-      "09:00",
-      "09:15",
-      "09:30",
-      "09:45",
-      "10:00",
-      "10:15",
-      "10:30",
-      "10:45",
-      "11:00",
-      "11:15",
-      "11:30",
-      "11:45",
-      "12:00",
-    ];
+  // dados sensores
+  const sensores = await fetch(`/camara/listarSensores/${selectCamaras.value}`);
+  const sensoresJson = await sensores.json();
 
-    let sensor1_temperatura = [
-      18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23, 24, 24, 25, 25, 26,
-    ];
-    let sensor1_umidade = [
-      66, 65, 65, 64, 64, 63, 63, 62, 62, 61, 61, 60, 60, 59, 59, 58, 58,
-    ];
+  let cont = 0;
 
-    sensor_nome = "Sensor 1";
-    camara_nome = "Câmara 2";
-    sensor_posicao = "Frente";
+  for (let i = 0; i < sensoresJson.length; i++) {
+    cont++;
+    if (selectSensores.value == sensoresJson[i].id_sensor) {
+      sensorNome = `Sensor ${sensoresJson[i].id_sensor}`;
+      sensorPosicao = sensoresJson[i].posicionamento;
 
-    horarios = sensor1_horarios;
-    temperaturas = sensor1_temperatura;
-    umidades = sensor1_umidade;
-
-    listaAlertas.innerHTML = `
-           
-            <div class="alertasAvisos">
-            <h3>Temperatura Crítica</h3>
-            <p>Sensor 1 registrou 26°C às 12:00 (Crítico: abaixo de 15°C ou acima de 21°C).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Umidade Crítica</h3>
-            <p>Sensor 1 registrou 58% às 12:00 (Crítico: abaixo de 62% ou acima de 68%).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Temperatura Crítica</h3>
-            <p>Sensor 1 registrou 25°C às 11:45 (Crítico: abaixo de 15°C ou acima de 21°C).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Umidade Crítica</h3>
-            <p>Sensor 1 registrou 58% às 11:45 (Crítico: abaixo de 62% ou acima de 68%).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Temperatura Crítica</h3>
-            <p>Sensor 1 registrou 24°C às 11:30 (Crítico: abaixo de 15°C ou acima de 21°C).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Umidade Crítica</h3>
-            <p>Sensor 1 registrou 59% às 11:30 (Crítico: abaixo de 62% ou acima de 68%).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Temperatura Crítica</h3>
-            <p>Sensor 1 registrou 23°C às 11:15 (Crítico: abaixo de 15°C ou acima de 21°C).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Umidade Crítica</h3>
-            <p>Sensor 1 registrou 60% às 11:15 (Crítico: abaixo de 62% ou acima de 68%).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Temperatura Crítica</h3>
-            <p>Sensor 1 registrou 23°C às 11:00 (Crítico: abaixo de 15°C ou acima de 21°C).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Umidade Crítica</h3>
-            <p>Sensor 1 registrou 61% às 11:00 (Crítico: abaixo de 62% ou acima de 68%).</p>
-            </div>
-
-            `;
-  } else if (camaraSelecionada == 2 && sensorSelecionado == 2) {
-    let sensor2_horarios = [
-      "08:00",
-      "08:15",
-      "08:30",
-      "08:45",
-      "09:00",
-      "09:15",
-      "09:30",
-      "09:45",
-      "10:00",
-      "10:15",
-      "10:30",
-      "10:45",
-      "11:00",
-      "11:15",
-      "11:30",
-      "11:45",
-      "12:00",
-    ];
-    let sensor2_temperatura = [
-      18, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23, 24, 24, 25, 25,
-    ];
-    let sensor2_umidade = [
-      65, 65, 64, 64, 63, 63, 62, 62, 61, 61, 60, 60, 59, 59, 58, 58, 57,
-    ];
-
-    sensor_nome = "Sensor 2";
-    camara_nome = "Câmara 2";
-    sensor_posicao = "Fundo";
-
-    horarios = sensor2_horarios;
-    temperaturas = sensor2_temperatura;
-    umidades = sensor2_umidade;
-
-    listaAlertas.innerHTML = `
-            <div class="alertasAvisos">
-            <h3>Temperatura Crítica</h3>
-            <p>Sensor 2 registrou 25°C às 12:00 (Crítico: abaixo de 15°C ou acima de 21°C).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Umidade Crítica</h3>
-            <p>Sensor 2 registrou 57% às 12:00 (Crítico: abaixo de 62% ou acima de 68%).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Temperatura Crítica</h3>
-            <p>Sensor 2 registrou 25°C às 11:45 (Crítico: abaixo de 15°C ou acima de 21°C).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Umidade Crítica</h3>
-            <p>Sensor 2 registrou 58% às 11:45 (Crítico: abaixo de 62% ou acima de 68%).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Temperatura Crítica</h3>
-            <p>Sensor 2 registrou 24°C às 11:30 (Crítico: abaixo de 15°C ou acima de 21°C).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Umidade Crítica</h3>
-            <p>Sensor 2 registrou 59% às 11:30 (Crítico: abaixo de 62% ou acima de 68%).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Temperatura Crítica</h3>
-            <p>Sensor 2 registrou 23°C às 11:15 (Crítico: abaixo de 15°C ou acima de 21°C).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Umidade Crítica</h3>
-            <p>Sensor 2 registrou 60% às 11:15 (Crítico: abaixo de 62% ou acima de 68%).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Temperatura Crítica</h3>
-            <p>Sensor 2 registrou 23°C às 11:00 (Crítico: abaixo de 15°C ou acima de 21°C).</p>
-            </div>
-
-            <div class="alertasAvisos">
-            <h3>Umidade Crítica</h3>
-            <p>Sensor 2 registrou 61% às 11:00 (Crítico: abaixo de 62% ou acima de 68%).</p>
-            </div>
-
-            `;
+      for (let j = 0; j < jsonCameras.length; j++) {
+        if (jsonCameras[j].id_camara == selectCamaras.value) {
+          camaraNome = jsonCameras[j].camara;
+          break;
+        }
+      }
+    }
   }
 
-  let ultimaTemperatura = temperaturas[temperaturas.length - 1];
-  let ultimaUmidade = umidades[umidades.length - 1];
+  temperaturaIdeal = sensoresJson[0].temperatura_ideal;
+  umidadeIdeal = sensoresJson[0].umidade_ideal;
 
+  document.getElementById("resumoPainel").innerHTML =
+    `${camaraNome} · ${sensorNome} - ${sensorPosicao}`;
+
+  document.getElementById("kpiPosicaoSensor").innerHTML = sensorPosicao;
+  document.getElementById("kpiQtdSensores").innerHTML = cont;
+}
+
+function sl() {
   const statusTemperatura = document.getElementById("statusTemperatura");
   const statusUmidade = document.getElementById("statusUmidade");
   const statusPosicaoSensor = document.getElementById("statusPosicaoSensor");
@@ -313,10 +125,6 @@ function carregarDados() {
   document.getElementById("kpiTemperatura").innerHTML =
     `${ultimaTemperatura} °C`;
   document.getElementById("kpiUmidade").innerHTML = `${ultimaUmidade} %`;
-  document.getElementById("kpiPosicaoSensor").innerHTML = sensor_posicao;
-  document.getElementById("kpiQtdSensores").innerHTML = qtdSensores;
-  document.getElementById("resumoPainel").innerHTML =
-    `${camara_nome} · ${sensor_nome} - ${sensor_posicao}`;
 
   if (
     ultimaTemperatura < tempAlertaMin ||
@@ -424,69 +232,173 @@ function carregarDados() {
   });
 }
 
-selectCamaras.addEventListener("change", carregarDados);
-selectSensores.addEventListener("change", carregarDados);
+function carregarDados() {
+  let camaraSelecionada = Number(selectCamaras.value);
+  let sensorSelecionado = Number(selectSensores.value);
 
-// Buscando e adicionando camaras e sensores direto do banco
+  let horarios = [];
+  let temperaturas = [];
+  let umidades = [];
 
-async function popularSelectCamara() {
-  const camaras = await fetch(
-    `/camara/listar/${sessionStorage.codigo_empresa}`,
-  );
+  if (camaraSelecionada == 1 && sensorSelecionado == 1) {
+    let sensor1_horarios = [
+      "08:00",
+      "08:15",
+      "08:30",
+      "08:45",
+      "09:00",
+      "09:15",
+      "09:30",
+      "09:45",
+      "10:00",
+      "10:15",
+      "10:30",
+      "10:45",
+      "11:00",
+      "11:15",
+      "11:30",
+      "11:45",
+      "12:00",
+    ];
 
-  const jsonCameras = await camaras.json();
+    let sensor1_temperatura = [
+      17, 17, 17, 18, 18, 18, 18, 18, 19, 19, 19, 18, 18, 18, 18, 18, 18,
+    ];
+    let sensor1_umidade = [
+      66, 66, 65, 65, 65, 65, 64, 64, 64, 64, 64, 65, 65, 65, 65, 65, 65,
+    ];
 
-  selectCamaras.innerHTML = "";
+    horarios = sensor1_horarios;
+    temperaturas = sensor1_temperatura;
+    umidades = sensor1_umidade;
 
-  for (let i = 0; i < jsonCameras.length; i++) {
-    selectCamaras.innerHTML += `
-     <option value="${jsonCameras[i].id_camara}">${jsonCameras[i].camara}</option> `;
+    listaAlertas.innerHTML = `
+
+        `;
+  } else if (camaraSelecionada == 1 && sensorSelecionado == 2) {
+    let sensor2_horarios = [
+      "08:00",
+      "08:15",
+      "08:30",
+      "08:45",
+      "09:00",
+      "09:15",
+      "09:30",
+      "09:45",
+      "10:00",
+      "10:15",
+      "10:30",
+      "10:45",
+      "11:00",
+      "11:15",
+      "11:30",
+      "11:45",
+      "12:00",
+    ];
+    let sensor2_temperatura = [
+      17, 17, 18, 18, 18, 18, 18, 20, 19, 18, 18, 18, 18, 18, 18, 18, 18,
+    ];
+    let sensor2_umidade = [
+      65, 65, 65, 65, 64, 64, 64, 63, 64, 64, 65, 65, 65, 65, 65, 65, 65,
+    ];
+
+    sensor_nome = "Sensor 2";
+    camara_nome = "Câmara 1";
+    sensor_posicao = "Centro";
+
+    horarios = sensor2_horarios;
+    temperaturas = sensor2_temperatura;
+    umidades = sensor2_umidade;
+  } else if (camaraSelecionada == 2 && sensorSelecionado == 1) {
+    let sensor1_horarios = [
+      "08:00",
+      "08:15",
+      "08:30",
+      "08:45",
+      "09:00",
+      "09:15",
+      "09:30",
+      "09:45",
+      "10:00",
+      "10:15",
+      "10:30",
+      "10:45",
+      "11:00",
+      "11:15",
+      "11:30",
+      "11:45",
+      "12:00",
+    ];
+
+    let sensor1_temperatura = [
+      18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23, 24, 24, 25, 25, 26,
+    ];
+    let sensor1_umidade = [
+      66, 65, 65, 64, 64, 63, 63, 62, 62, 61, 61, 60, 60, 59, 59, 58, 58,
+    ];
+
+    sensor_nome = "Sensor 1";
+    camara_nome = "Câmara 2";
+    sensor_posicao = "Frente";
+
+    horarios = sensor1_horarios;
+    temperaturas = sensor1_temperatura;
+    umidades = sensor1_umidade;
+  } else if (camaraSelecionada == 2 && sensorSelecionado == 2) {
+    let sensor2_horarios = [
+      "08:00",
+      "08:15",
+      "08:30",
+      "08:45",
+      "09:00",
+      "09:15",
+      "09:30",
+      "09:45",
+      "10:00",
+      "10:15",
+      "10:30",
+      "10:45",
+      "11:00",
+      "11:15",
+      "11:30",
+      "11:45",
+      "12:00",
+    ];
+    let sensor2_temperatura = [
+      18, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23, 24, 24, 25, 25,
+    ];
+    let sensor2_umidade = [
+      65, 65, 64, 64, 63, 63, 62, 62, 61, 61, 60, 60, 59, 59, 58, 58, 57,
+    ];
+
+    sensor_nome = "Sensor 2";
+    camara_nome = "Câmara 2";
+    sensor_posicao = "Fundo";
+
+    horarios = sensor2_horarios;
+    temperaturas = sensor2_temperatura;
+    umidades = sensor2_umidade;
   }
+
+  let ultimaTemperatura = temperaturas[temperaturas.length - 1];
+  let ultimaUmidade = umidades[umidades.length - 1];
 }
 
-async function popularSelectSensor() {
-  const sensores = await fetch(`/camara/listarSensores/${selectCamaras.value}`);
+selectCamaras.addEventListener("change", async function () {
+  await popularSelectSensor();
+  await coletarDados();
+});
 
-  const sensoresJson = await sensores.json();
+selectSensores.addEventListener("change", async function () {
+  await coletarDados();
+});
 
-  selectSensores.innerHTML = "";
-
-  for (let i = 0; i < sensoresJson.length; i++) {
-    console.log("Dados", sensoresJson);
-    selectSensores.innerHTML += `
-     <option value="${sensoresJson[i].id_sensor}"> Sensor ${sensoresJson[i].id_sensor} - ${sensoresJson[i].posicionamento}</option> `;
-  }
-}
-
-async function carregarselects() {
-  try {
-    await popularSelectCamara();
-    console.log("resposta camara:", selectCamaras.value);
-
-    await popularSelectSensor();
-    console.log("resposta sensor:", selectSensores.value);
-
-    await coletarDados();
-  } catch (err) {
-    console.log(err);
-  }
-}
-carregarselects();
-carregarDados();
-
-async function coletarDados() {
-  const sensores = await fetch(`/camara/listarSensores/${selectCamaras.value}`);
-
-  const sensoresJson = await sensores.json();
-
-  temperaturaIdeal = sensoresJson[0].temperatura_ideal;
-  umidadeIdeal = sensoresJson[0].umidade_ideal;
-}
-
-selectCamaras.addEventListener("change", coletarDados);
-selectCamaras.addEventListener("change", view);
-
+// função para verificação de dados
 function view() {
   console.log(temperaturaIdeal);
   console.log(umidadeIdeal);
+  console.log(camaraNome);
+  console.log(sensorPosicao);
 }
+
+selectCamaras.addEventListener("change", view);
