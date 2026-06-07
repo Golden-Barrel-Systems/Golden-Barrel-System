@@ -32,8 +32,19 @@ function umidadeAtual(req, res) {
     });
 }
 
+function ultimasMedicoes(req, res) {
+    var idSensor = req.params.idSensor;
+
+    sensorModel.ultimasMedicoes(idSensor).then((resultado) => {
+        res.status(200).json(resultado);
+    });
+}
+
+
+
 module.exports = {
     dadosSensor,
     temperaturaAtual,
-    umidadeAtual
+    umidadeAtual,
+    ultimasMedicoes
 }

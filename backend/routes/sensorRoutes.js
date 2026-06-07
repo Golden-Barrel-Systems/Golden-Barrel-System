@@ -16,4 +16,9 @@ router.get("/umidadeAtual/:idSensor", function (req, res) {
     sensorController.umidadeAtual(req, res);
 });
 
+router.get(
+    "/ultimasMedicoes/:idSensor",
+    sensorController.ultimasMedicoes
+);
+
 module.exports = router
