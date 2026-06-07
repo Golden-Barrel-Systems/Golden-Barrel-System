@@ -69,20 +69,17 @@ function popularKpis() {
                             let temperaturaAtual = json[0].valor;
                             let temperaturaIdeal = Number(json[i].temperatura_ideal);
 
-                            let temperaturaAlertaMinimo = temperaturaIdeal - 3;
-                            let temperaturaAlertaMaximo = temperaturaIdeal + 3;
-
                             let temperaturaCriticoMinimo = temperaturaIdeal - 5;
                             let temperaturaCriticoMaximo = temperaturaIdeal + 5;
 
                             let color;
 
-                            if (temperaturaAtual <= temperaturaCriticoMinimo || temperaturaAtual >= temperaturaCriticoMaximo) {
-                                color = 'rgba(255, 0, 0, 0.8)';
-                            } else if (temperaturaAtual <= temperaturaAlertaMinimo || temperaturaAtual >= temperaturaAlertaMaximo) {
-                                color = 'rgba(255, 165, 0, 0.5)';
-                            } else {
+                            if (temperaturaAtual >= (temperaturaIdeal - 1) && temperaturaAtual <= (temperaturaIdeal + 1)) {
                                 color = 'rgba(0, 128, 0, 0.5)';
+                            } else if (temperaturaAtual <= temperaturaCriticoMinimo || temperaturaAtual >= temperaturaCriticoMaximo) {
+                                color = 'rgba(255, 0, 0, 0.8)';
+                            } else {
+                                color = 'rgba(255, 166, 0, 0.69)';
                             }
 
 
@@ -92,7 +89,7 @@ function popularKpis() {
                                     <center style="color: white">Temperatura Atual</center>
                                     <p id="kpiTemperatura2" style="color: white">${temperaturaAtual}°C</p>
                                     <div class="desc" style="color: white">
-                                        Ideal: ${temperaturaIdeal - 1}°C e ${temperaturaIdeal + 1}°C
+                                        Ideal: Entre ${temperaturaIdeal - 1}°C e ${temperaturaIdeal + 1}°C
                                     </div>
                                 </div>
                             `
@@ -109,20 +106,17 @@ function popularKpis() {
                             let umidadeAtual = json[0].valor;
                             let umidadeIdeal = Number(json[i].umidade_ideal);
 
-                            let umidadeAlertaMinimo = umidadeIdeal - 3;
-                            let umidadeAlertaMaximo = umidadeIdeal + 3;
-
                             let umidadeCriticoMinimo = umidadeIdeal - 5;
                             let umidadeCriticoMaximo = umidadeIdeal + 5;
 
                             let color;
 
-                            if (umidadeAtual <= umidadeCriticoMinimo || umidadeAtual >= umidadeCriticoMaximo) {
-                                color = 'rgba(255, 0, 0, 0.8)';
-                            } else if (umidadeAtual <= umidadeAlertaMinimo || umidadeAtual >= umidadeAlertaMaximo) {
-                                color = 'rgba(255, 165, 0, 0.5)';
-                            } else {
+                            if (umidadeAtual >= (umidadeIdeal - 1) && umidadeAtual <= (umidadeIdeal + 1)) {
                                 color = 'rgba(0, 128, 0, 0.5)';
+                            } else if (umidadeAtual <= umidadeCriticoMinimo || umidadeAtual >= umidadeCriticoMaximo) {
+                                color = 'rgba(255, 0, 0, 0.8)';
+                            } else {
+                                color = 'rgba(255, 166, 0, 0.69)';
                             }
 
                             kpis.innerHTML += `
@@ -131,8 +125,7 @@ function popularKpis() {
                                     <center style="color: white">Umidade Atual</center>
                                     <p id="kpiUmidade1" style="color: white">${umidadeAtual}%</p>
                                     <div class="desc" style="color: white">
-                                        Ideal: ${Number(json[i].umidade_ideal) - 1}°C e ${Number(json[i].umidade_ideal) + 1}°C
-                                        <p style="display: none">${Number(json[i].umidade_ideal) - 1} ${Number(json[i].umidade_ideal) + 1}</p>
+                                        Ideal: Entre ${Number(json[i].umidade_ideal) - 1}°C e ${Number(json[i].umidade_ideal) + 1}°C
                                     </div>
                                 </div>
                              `
