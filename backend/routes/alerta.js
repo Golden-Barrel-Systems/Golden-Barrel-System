@@ -7,4 +7,8 @@ router.post("/registrar", function (req, res) {
     alertaController.registrar(req, res);
 });
 
+router.get("/buscar/:idCamara", function (req, res) {
+    alertaController.buscar(req, res);
+});
+
 module.exports = router;

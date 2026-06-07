@@ -44,6 +44,15 @@ function registrar(req, res) {
     });
 }
 
+function buscar(req, res) {
+    var idCamara = req.params.idCamara;
+
+    alertaModel.buscar(idCamara).then((resultado) => {
+        res.status(200).json(resultado);
+    });
+}
+
 module.exports = {
     registrar,
+    buscar
 }

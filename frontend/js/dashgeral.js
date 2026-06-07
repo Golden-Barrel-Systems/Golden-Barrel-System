@@ -95,6 +95,8 @@ function popularKpis() {
                                     </div>
                                 </div>
                             `
+
+                            buscarAlertas(selectCamaras.value);
                         })
                     }).catch(err => {
                         console.log(err);
@@ -133,6 +135,8 @@ function popularKpis() {
                                     </div>
                                 </div>
                              `
+
+                            buscarAlertas(selectCamaras.value);
                         })
                     }).catch(err => {
                         console.log(err);
@@ -158,11 +162,47 @@ function registrarAlerta(idMedicao, mensagem, peso) {
         }),
     })
         .then(res => {
-            exibirAlertas();
+            buscarAlertas(selectCamaras.value);
         })
         .catch(err => {
             console.log(err);
         })
+}
+
+function buscarAlertas(idCamara) {
+    fetch(`/alerta/buscar/${idCamara}`, {
+        method: "GET"
+    }).then(res => {
+        res.json().then(json => {
+            exibirAlertas(json);
+        })
+    }).catch(err => {
+        console.log(err);
+    })
+}
+
+function exibirAlertas(alertas) {
+    listaAlertas.innerHTML = ``;
+
+    for (let i = 0; i < alertas.length; i++) {
+
+
+        if (alertas[i].mensagem == 'Umidade acima do ideal' || alertas[i].mensagem == 'Umidade abaixo do ideal') {
+            listaAlertas.innerHTML += `
+                <div class="alertas${alertas[i].peso}">
+                    <h3${alertas[i].mensagem}</h3>
+                    <p>Sensor ${alertas[i].numero_serial} registrou ${alertas[i].valor}% de umidade às ${alertas[i].hora}.</p>
+                </div>
+            `
+        } else {
+            listaAlertas.innerHTML += `
+                <div class="alertas${alertas[i].peso}">
+                    <h3${alertas[i].mensagem}</h3>
+                    <p>Sensor ${alertas[i].numero_serial} registrou ${alertas[i].valor}°C às ${alertas[i].hora}.</p>
+                </div>
+            `
+        }
+    }
 }
 
 let graficoTemperatura = null;
