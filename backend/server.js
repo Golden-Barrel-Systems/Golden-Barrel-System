@@ -24,6 +24,7 @@ const camaraRouter = require("./routes/camaraRoutes");
 const sensorRouter = require("./routes/sensorRoutes");
 const usuarioRouter = require("./routes/usuarios");
 const empresaRouter = require("./routes/empresas");
+const alertaRouter = require("./routes/alerta");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -46,6 +47,7 @@ app.use("/camara", camaraRouter);
 app.use("/sensor", sensorRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/empresas", empresaRouter);
+app.use("/alerta", alertaRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://${HOST_APP}:${PORTA_APP}`)
