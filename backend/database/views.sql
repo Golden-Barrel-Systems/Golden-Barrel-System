@@ -67,3 +67,25 @@ CREATE VIEW vw_temperatura_atual AS
     WHERE
         medicao.tipo = 'temperatura'
     ORDER BY medicao.data_hora DESC;
+
+
+CREATE VIEW vw_ultimos_alertas AS
+    SELECT 
+        DATE_FORMAT(alerta.data_hora, '%H:%i') AS hora,
+        camara.id_camara,
+        sensor_meta.numero_serial,
+        medicao.valor,
+        alerta.mensagem,
+        alerta.peso
+    FROM
+        alerta
+            JOIN
+        medicao ON alerta.fk_medicao = medicao.id_medicao
+            JOIN
+        sensor ON medicao.fk_sensor = sensor.id_sensor
+            JOIN
+        sensor_meta ON sensor_meta.fk_sensor = sensor.id_sensor
+            JOIN
+        camara ON sensor.fk_camara = camara.id_camara
+    ORDER BY alerta.data_hora DESC
+    LIMIT 10;
