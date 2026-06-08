@@ -1,7 +1,7 @@
 const chamadoModel = require('../models/chamadoModels')
 
 async function buscarChamados(req, res) {
-    const tipoUsuario = req.usuario.tipoUsuario;
+    const tipoUsuario = req.usuario.tipo;
 
     const nivelSuporte = tipoUsuario.split('_')[1]
     // const nivelSuporte = 3;
@@ -39,12 +39,12 @@ async function repassarChamado(req, res) {
 };
 
 async function responderChamado(req, res) {
-    const { idChamado, respostaChamado } = req.body;
+    const { id_chamado, respostaChamado } = req.body;
 
     try {
-        const resposta = await chamadoModel.fecharChamado(idChamado, respostaChamado);
+        const resposta = await chamadoModel.fecharChamado(id_chamado, respostaChamado);
 
-        return res.status(200).json({ mensagem: `O chamado #${idChamado} foi respondido e fechado` })
+        return res.status(200).json({ mensagem: `O chamado #${id_chamado} foi respondido e fechado` })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ erro: error.sqlMessage })

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Golden Bar</title>
+    <link rel="stylesheet" href="./css/pages.css/cadastro.css" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="img-section"
+            style="background-image: url('./images/pages/cadastro/img_page-0001.jpg'); background-position: center; background-size: cover; background-repeat: no-repeat;">
+            <button onclick="voltar()">Voltar</button>
+        </div>
+        <div class="cadastro-section">
+            <div class="content">
+                <h1 class="title">Cadastro - Golden Barrel System</h1>
+                <div class="form-cadastro">
+                    <div class="nome">
+                        <label for="input_nome">Nome da Empresa<span id="mensagemnome"></span></label>
+                        <input type="text" id="input_nome" class="input" placeholder="Insira o nome da empresa aqui" />
+                    </div>
+                    <div class="cnpj">
+                        <label for="input_cnpj">CNPJ <span id="mensagemcnpj"></span></label>
+                        <input type="text" id="input_cnpj" maxlength="18" oninput="CNPJ()" class="input"
+                            placeholder="Confirme seu CNPJ aqui" />
+                    </div>
+                    <div class="email">
+                        <label for="input_logradouro">Logradouro <span id="mensagememail"></span></label>
+                        <input type="text" id="input_logradouro" class="input" placeholder="Insira o logradouro aqui" />
+                    </div>
+                    <div class="password">
+                        <label for="input_numero">Número <span id="mensagemsenha"></span></label>
+                        <input type="text" id="input_numero" oninput="senhaa()" class="input"
+                            placeholder="Insira o número aqui" />
+                    </div>
+                    <div class="confirm-password">
+                        <label for="input_complemento">Complemento <span id="mensagemconfirm"></span></label>
+                        <input type="text" id="input_complemento" class="input"
+                            placeholder="Opcional" />
+                    </div>
+                    <div class="codigo">
+                        <label for="input_codigo">Bairro <span id="mensagemcod"></span></label>
+                        <input type="text" id="input_codigo" class="input" placeholder="Insira o bairro aqui" />
+                    </div>
+                    <div class="codigo">
+                        <label for="input_codigo">Bairro <span id="mensagemcod"></span></label>
+                        <input type="text" id="input_codigo" class="input" placeholder="Insira o bairro aqui" />
+                    </div>
+                    <div class="login-link">
+                        <a href="./login.html">Já tem uma conta?</a>
+                    </div>
+
+
+                    <button class="btn-logar" onclick="cadastrar()">cadastrar</button>
+                </div>
+            </div>
+</body>
+
+</html>
+
+<script src="./js/cadastro.js"></script>

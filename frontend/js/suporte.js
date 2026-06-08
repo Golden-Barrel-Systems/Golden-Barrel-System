@@ -7,7 +7,7 @@ async function gerarResposta(mensagem) {
     const token = localStorage.getItem("token");
 
     try {
-        const resposta = await fetch('http://localhost:8080/chat/gerar', {
+        const resposta = await fetch('/chat/gerar', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -33,7 +33,7 @@ async function carregarResposta(mensagem) {
 
 async function carregarChamados(status, prioridade) {
     const token = localStorage.getItem("token");
-    const resposta = await fetch('http://localhost:8080/chamado/buscar', {
+    const resposta = await fetch('/chamado/buscar', {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -60,15 +60,15 @@ async function carregarChamados(status, prioridade) {
             };
         chamadosMostrados.push(chamado)
 
-        const data = chamado.dtAbertura.slice(0, 10);
+        const data = chamado.data_abertura.slice(0, 10);
         chamadosContainer.innerHTML += `
             <div class="chamado">
                 <div class="chamado-header">
-                    <h2>Chamado #${chamado.idChamado}</h2>
+                    <h2>Chamado #${chamado.id_chamado}</h2>
                     <span class="status ${chamado.statuss}"><strong>Status:</strong> ${chamado.statuss}</span>
                 </div>
                 <p><strong>Prioridade:</strong> ${chamado.prioridade}</p>
-                <p><strong>ID do Usuário:</strong> ${chamado.usuario}</p>
+                <p><strong>ID do Usuário:</strong> ${chamado.fk_usuario}</p>
                 <p><strong>Assunto:</strong> ${chamado.assunto}</p>
                 <p><strong>Data de abertura:</strong> ${data}</p>
                 <p><strong>Descrição:</strong></p>
@@ -99,8 +99,8 @@ async function carregarChamados(status, prioridade) {
     for (let j = 0; j < responderBtn.length; j++) {
         responderBtn[j].addEventListener('click', () => {
             console.log(chamadosMostrados[j])
-            const data = chamadosMostrados[j].dtAbertura.slice(0, 10);
-            abirModalChamado(chamadosMostrados[j].idChamado, chamadosMostrados[j].statuss, chamadosMostrados[j].prioridade, chamadosMostrados[j].usuario, chamadosMostrados[j].assunto, data, chamadosMostrados[j].descricao);
+            const data = chamadosMostrados[j].data_abertura.slice(0, 10);
+            abirModalChamado(chamadosMostrados[j].id_chamado, chamadosMostrados[j].statuss, chamadosMostrados[j].prioridade, chamadosMostrados[j].usuario, chamadosMostrados[j].assunto, data, chamadosMostrados[j].descricao);
             for(let k = 0; k < responderBtn.length; k++) {
                 responderBtn[k].classList.add('disabled');
                 repassarBtn[k].classList.add('disabled')
@@ -108,7 +108,7 @@ async function carregarChamados(status, prioridade) {
         });
 
         repassarBtn[j].addEventListener('click', () => {
-            repassarChamado(chamadosMostrados[j].idChamado)
+            repassarChamado(chamadosMostrados[j].id_chamado)
             .then(
                 setTimeout(() => {
                     carregarChamados(status, prioridade)
@@ -124,7 +124,7 @@ async function carregarChamados(status, prioridade) {
 async function repassarChamado(id) {
     const token = localStorage.getItem("token");
     try {
-        const resposta = await fetch('http://localhost:8080/chamado/repassar', {
+        const resposta = await fetch('/chamado/repassar', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -149,14 +149,14 @@ async function repassarChamado(id) {
 async function responderChamado(id, respostaChamado) {
     const token = localStorage.getItem("token");
     try {
-        const resposta = await fetch('http://localhost:8080/chamado/responder', {
+        const resposta = await fetch('/chamado/responder', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
-                idChamado: id,
+                id_chamado: id,
                 respostaChamado: respostaChamado
             })
         });

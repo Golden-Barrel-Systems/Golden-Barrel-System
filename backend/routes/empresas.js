@@ -7,4 +7,8 @@ router.get("/listar", function (req, res) {
   empresaController.listar(req, res);
 });
 
+router.post("/cadastrar", (req, res) => {
+  empresaController.cadastrar(req, res);
+});
+
 module.exports = router;
