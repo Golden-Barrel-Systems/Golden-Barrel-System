@@ -113,7 +113,7 @@ function exibirTemperaturaAtual(sensores) {
                     situacaoSensores.push("critico");
 
 
-                    // registrarAlerta(json[i].id_medicao, "temperatura abaixo do ideal", "critico");
+                    registrarAlerta(json[i].id_medicao, "temperatura abaixo do ideal", "critico");
 
                 } else if (temperaturaAtual >= temperaturaCriticoMaximo) {
 
@@ -121,7 +121,7 @@ function exibirTemperaturaAtual(sensores) {
 
                     situacaoSensores.push("critico");
 
-                    // registrarAlerta(json[i].id_medicao, "temperatura acima do ideal", "critico");
+                    registrarAlerta(json[i].id_medicao, "temperatura acima do ideal", "critico");
 
                 } else if (temperaturaAtual <= temperaturaAlertaMinimo) {
 
@@ -129,7 +129,7 @@ function exibirTemperaturaAtual(sensores) {
 
                     situacaoSensores.push("alerta");
 
-                    // registrarAlerta(json[i].id_medicao, "temperatura abaixo do ideal", "medio");
+                    registrarAlerta(json[i].id_medicao, "temperatura abaixo do ideal", "medio");
 
                 } else {
 
@@ -137,7 +137,7 @@ function exibirTemperaturaAtual(sensores) {
 
                     situacaoSensores.push("alerta");
 
-                    // registrarAlerta(json[i].id_medicao, "temperatura acima do ideal", "medio");
+                    registrarAlerta(json[i].id_medicao, "temperatura acima do ideal", "medio");
 
                 }
 
@@ -360,11 +360,11 @@ function exibirAlertas(alertas) {
 let graficoTemperatura = null;
 let graficoUmidade = null;
 
-let horarios = ["08:00", "08:15", "08:30", "08:45",
-    "09:00", "09:15", "09:30", "09:45",
-    "10:00", "10:15", "10:30", "10:45",
-    "11:00", "11:15", "11:30", "11:45",
-    "12:00"];
+// let horarios = ["08:00", "08:15", "08:30", "08:45",
+//     "09:00", "09:15", "09:30", "09:45",
+//     "10:00", "10:15", "10:30", "10:45",
+//     "11:00", "11:15", "11:30", "11:45",
+//     "12:00"];
 
 let temperatura_ideal = 18;
 let umidade_ideal = 65;
