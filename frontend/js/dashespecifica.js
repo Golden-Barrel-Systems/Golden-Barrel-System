@@ -47,7 +47,7 @@ async function popularSelectSensor() {
   for (let i = 0; i < sensoresJson.length; i++) {
     console.log("Dados", sensoresJson);
     selectSensores.innerHTML += `
-     <option value="${sensoresJson[i].id_sensor}"> Sensor ${sensoresJson[i].id_sensor} - ${sensoresJson[i].posicionamento}</option> `;
+     <option value="${sensoresJson[i].id_sensor}"> Sensor ${sensoresJson[i].nome} - ${sensoresJson[i].posicionamento}</option> `;
   }
 }
 
@@ -86,7 +86,7 @@ async function coletarDados() {
   for (let i = 0; i < sensoresJson.length; i++) {
     cont++;
     if (selectSensores.value == sensoresJson[i].id_sensor) {
-      sensorNome = `Sensor ${sensoresJson[i].id_sensor}`;
+      sensorNome = `Sensor ${sensoresJson[i].nome}`;
       sensorPosicao = sensoresJson[i].posicionamento;
 
       for (let j = 0; j < jsonCameras.length; j++) {
