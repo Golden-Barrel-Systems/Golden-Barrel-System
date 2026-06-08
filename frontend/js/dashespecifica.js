@@ -164,7 +164,6 @@ async function buscarDadosGrafico() {
   let ultimaTemperatura = dadosTemp[dadosTemp.length - 1];
   let ultimaUmidade = dadosUmi[dadosUmi.length - 1];
 
-
   if (graficoTemperatura != null) {
     graficoTemperatura.destroy();
   }
@@ -187,7 +186,6 @@ async function buscarDadosGrafico() {
       maintainAspectRatio: false,
     },
   });
-
 
   if (graficoUmidade != null) {
     graficoUmidade.destroy();
@@ -285,6 +283,40 @@ async function buscarDadosGrafico() {
   }
 }
 
+// alertas
+
+async function buscarAlertas() {
+  const resposta = await fetch(`/alerta/sensor/${selectSensores.value}`);
+
+  const dados = await resposta.json();
+
+  exibirAlertas(dados);
+}
+
+function exibirAlertas(alertas) {
+  listaAlertas.innerHTML = "";
+
+  for (let i = 0; i < alertas.length; i++) {
+    listaAlertas.innerHTML += `
+    
+      <div class="alertas${alertas[i].peso}">
+        <h3>${alertas[i].mensagem}</h3>
+        <p>
+          Sensor ${alertas[i].id_sensor}
+          registrou
+          ${alertas[i].valor}
+          ${alertas[i].tipo == "temperatura" ? "°C" : "%"} 
+          ás ${alertas[i].data_hora.substring(11, 16)}
+        </p>
+
+      </div>
+    `;
+  }
+}
+
+// atualizações
+buscarAlertas();
+
 selectCamaras.addEventListener("change", async function () {
   await popularSelectSensor();
   await coletarDados();
@@ -294,8 +326,18 @@ selectCamaras.addEventListener("change", async function () {
 selectSensores.addEventListener("change", async function () {
   await coletarDados();
   await buscarDadosGrafico();
+  await buscarAlertas();
 });
 
 window.onload = async function () {
   await carregarselects();
 };
+
+setInterval(async () => {
+  try {
+    await buscarDadosGrafico();
+    await buscarAlertas();
+  } catch (err) {
+    console.error(err);
+  }
+}, 1000);
