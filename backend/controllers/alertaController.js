@@ -1,58 +1,41 @@
-const alertaModel = require('../models/alertaModels')
+const alertaModel = require("../models/alertaModels");
 
 async function listarAlertasPorSensor(req, res) {
-    try {
-        const id_sensor = req.body.id_sensor;
+  try {
+    const idSensor = req.params.idSensor;
 
-        const alertas = await alertaModel.listarAlertasPorSensor(id_sensor);
+    const resultado = await alertaModel.listarAlertasPorSensor(idSensor);
 
-        if (alertas.length === 0) {
-            return res.status(404).json({ mensagem: "Nenhum alerta encontrado para este sensor" });
-        }
+    res.status(200).json(resultado);
+  } catch (erro) {
+    console.log(erro);
 
-        const data = [];
-
-        for (let i = 0; i < alertas.length; i++) {
-            const alerta = alertas[i];
-
-            const pegarItens = {
-                id_alerta: alerta.id_alerta,
-                descricao: alerta.descricao,
-                tipo: alerta.tipo,
-                status: alerta.status,
-                fk_sensor: alerta.fk_sensor,
-                data_criacao: alerta.data_criacao
-            };
-
-            data.push(pegarItens);
-        }
-
-        return res.status(200).json(data);
-    } catch (erro) {
-        console.log(erro);
-        return res.status(500).json({ mensagem: erro.sqlMessage || "Erro ao listar alertas do sensor" });
-    }
+    res.status(500).json({
+      erro: erro.sqlMessage,
+    });
+  }
 }
 
 function registrar(req, res) {
-    var idMedicao = req.body.idMedicaoServer;
-    var mensagem = req.body.mensagemServer;
-    var peso = req.body.pesoServer;
+  var idMedicao = req.body.idMedicaoServer;
+  var mensagem = req.body.mensagemServer;
+  var peso = req.body.pesoServer;
 
-    alertaModel.registrar(idMedicao, mensagem, peso).then((resultado) => {
-        res.status(200).json(resultado);
-    });
+  alertaModel.registrar(idMedicao, mensagem, peso).then((resultado) => {
+    res.status(200).json(resultado);
+  });
 }
 
 function buscar(req, res) {
-    var idCamara = req.params.idCamara;
+  var idCamara = req.params.idCamara;
 
-    alertaModel.buscar(idCamara).then((resultado) => {
-        res.status(200).json(resultado);
-    });
+  alertaModel.buscar(idCamara).then((resultado) => {
+    res.status(200).json(resultado);
+  });
 }
 
 module.exports = {
-    registrar,
-    buscar
-}
+  registrar,
+  buscar,
+  listarAlertasPorSensor
+};
