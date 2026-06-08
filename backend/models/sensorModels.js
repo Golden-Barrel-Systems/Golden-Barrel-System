@@ -30,16 +30,17 @@ function umidadeAtual(idSensor) {
 }
 
 function ultimasMedicoes(idSensor) {
-   var instrucaoSql = `
+  var instrucaoSql = `
         SELECT
             valor,
             tipo,
-            data_hora
+            DATE_FORMAT(data_hora,'%d/%m/%Y %H:%i:%s') as data_hora,
+            DATE_FORMAT(data_hora,'%H:%i') as hora
         FROM medicao
         WHERE fk_sensor = ${idSensor}
         ORDER BY data_hora DESC
         LIMIT 20;
-    `; 
+    `;
 
   return database.executar(instrucaoSql);
 }
@@ -49,5 +50,5 @@ module.exports = {
   buscarMedicoes,
   temperaturaAtual,
   umidadeAtual,
-  ultimasMedicoes
+  ultimasMedicoes,
 };
