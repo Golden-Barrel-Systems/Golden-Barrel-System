@@ -302,7 +302,7 @@ function exibirAlertas(alertas) {
       <div class="alertas${alertas[i].peso}">
         <h3>${alertas[i].mensagem}</h3>
         <p>
-          Sensor ${alertas[i].id_sensor}
+          Sensor ${alertas[i].nome}
           registrou
           ${alertas[i].valor}
           ${alertas[i].tipo == "temperatura" ? "°C" : "%"} 
