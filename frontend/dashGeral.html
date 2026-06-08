@@ -37,7 +37,7 @@
         <div class="camara SelecaoSelects">
           <h3>Selecionar Câmara</h3>
           <p>Escolha a câmara que deseja acompanhar no momento.</p>
-          <select id="selectCamaras"></select>
+          <select id="selectCamaras" onchange="popularSelect()"></select>
         </div>
 
         <div class="kpiResumo">
@@ -46,17 +46,7 @@
         </div>
       </div>
 
-      <div class="kpis" id="kpis">
-        
-
-        <div class="kpi" id="statusCamara">
-          <h3>Status Camara</h3>
-          <p id="kpiStatusCamara">Normal</p>
-          <div class="desc">
-            Condição atual da câmara de acordo com temperatura e umidade
-          </div>
-        </div>
-      </div>
+      <div class="kpis" id="kpis"></div>
 
       <div class="graficosArea">
         <div class="grafics">

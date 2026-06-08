@@ -41,7 +41,7 @@ function popularSelect() {
                         <option value="${json[i].id_camara}">${json[i].camara}</option>
                     `
                 }
-                popularKpis();
+                listarSensoresCamara();
             })
         })
         .catch(err => {
@@ -52,101 +52,251 @@ function popularSelect() {
 popularSelect();
 
 
-function popularKpis() {
+function listarSensoresCamara() {
     fetch(`/camara/listarSensores/${selectCamaras.value}`, {
         method: "GET"
     })
         .then(res => {
             res.json().then(json => {
 
-                for (let i = 0; i < json.length; i++) {
-
-                    fetch(`/sensor/temperaturaAtual/${json[i].id_sensor}`, {
-                        method: "GET"
-                    }).then(res => {
-                        res.json().then(json => {
-
-                            let temperaturaAtual = json[0].valor;
-                            let temperaturaIdeal = Number(json[i].temperatura_ideal);
-
-                            let temperaturaCriticoMinimo = temperaturaIdeal - 5;
-                            let temperaturaCriticoMaximo = temperaturaIdeal + 5;
-
-                            let color;
-
-                            if (temperaturaAtual >= (temperaturaIdeal - 1) && temperaturaAtual <= (temperaturaIdeal + 1)) {
-                                color = 'rgba(0, 128, 0, 0.5)';
-                            } else if (temperaturaAtual <= temperaturaCriticoMinimo || temperaturaAtual >= temperaturaCriticoMaximo) {
-                                color = 'rgba(255, 0, 0, 0.8)';
-                                // registrarAlerta(json[i].id_medicao, "Temperatura acima do ideal", "critico");
-                            } else {
-                                color = 'rgba(255, 166, 0, 0.69)';
-                                // registrarAlerta(json[i].id_medicao, "Temperatura acima do ideal", "medio");
-                            }
+                exibirTemperaturaAtual(json);
+                exibirUmidadeturaAtual(json);
+                totalKpis = json.length * 2;
 
 
-                            kpis.innerHTML += `
-                                <div class="kpi" style="background-color: ${color}">
-                                    <h3 style="color: white">SENSOR ${i + 1}</h3>
-                                    <center style="color: white">Temperatura Atual</center>
-                                    <p id="kpiTemperatura2" style="color: white">${temperaturaAtual}°C</p>
-                                    <div class="desc" style="color: white">
-                                        Ideal: Entre ${temperaturaIdeal - 1}°C e ${temperaturaIdeal + 1}°C
-                                    </div>
-                                </div>
-                            `
-
-                            buscarAlertas(selectCamaras.value);
-                        })
-                    }).catch(err => {
-                        console.log(err);
-                    })
-
-                    fetch(`/sensor/umidadeAtual/${json[i].id_sensor}`, {
-                        method: "GET"
-                    }).then(res => {
-                        res.json().then(json => {
-
-                            let umidadeAtual = json[0].valor;
-                            let umidadeIdeal = Number(json[i].umidade_ideal);
-
-                            let umidadeCriticoMinimo = umidadeIdeal - 5;
-                            let umidadeCriticoMaximo = umidadeIdeal + 5;
-
-                            let color;
-
-                            if (umidadeAtual >= (umidadeIdeal - 1) && umidadeAtual <= (umidadeIdeal + 1)) {
-                                color = 'rgba(0, 128, 0, 0.5)';
-                            } else if (umidadeAtual <= umidadeCriticoMinimo || umidadeAtual >= umidadeCriticoMaximo) {
-                                color = 'rgba(255, 0, 0, 0.8)';
-                                // registrarAlerta(json[i].id_medicao, "Umidade acima do ideal", "critico");
-                            } else {
-                                color = 'rgba(255, 166, 0, 0.69)';
-                                // registrarAlerta(json[i].id_medicao, "Umidade acima do ideal", "medio");
-                            }
-
-                            kpis.innerHTML += `
-                                <div class="kpi" style="background-color: ${color}">
-                                    <h3 style="color: white">SENSOR ${i + 1}</h3>
-                                    <center style="color: white">Umidade Atual</center>
-                                    <p id="kpiUmidade1" style="color: white">${umidadeAtual}%</p>
-                                    <div class="desc" style="color: white">
-                                        Ideal: Entre ${Number(json[i].umidade_ideal) - 1}°C e ${Number(json[i].umidade_ideal) + 1}°C
-                                    </div>
-                                </div>
-                             `
-
-                            buscarAlertas(selectCamaras.value);
-                        })
-                    }).catch(err => {
-                        console.log(err);
-                    })
-                }
+                setInterval(() => {
+                    kpis.innerHTML = ``;
+                    kpisProntos = 0;
+                    exibirTemperaturaAtual(json);
+                    exibirUmidadeturaAtual(json);
+                }, 5000);
             })
         })
         .catch(err => {
             console.log(err);
         })
+}
+
+var situacaoSensores = [];
+
+let kpisProntos = 0;
+let totalKpis = 0;
+
+function exibirTemperaturaAtual(sensores) {
+
+    for (let i = 0; i < sensores.length; i++) {
+
+        fetch(`/sensor/temperaturaAtual/${sensores[i].id_sensor}`, {
+            method: "GET"
+        }).then(res => {
+            res.json().then(json => {
+
+                let temperaturaAtual = json[0].valor;
+                let temperaturaIdeal = Number(json[i].temperatura_ideal);
+
+                let temperaturaCriticoMinimo = temperaturaIdeal - 5;
+                let temperaturaCriticoMaximo = temperaturaIdeal + 5;
+                let temperaturaAlertaMinimo = temperaturaIdeal - 4;
+
+                let color;
+
+                if (temperaturaAtual >= (temperaturaIdeal - 1) && temperaturaAtual <= (temperaturaIdeal + 1)) {
+
+                    color = 'rgba(0, 128, 0, 0.5)';
+
+                } else if (temperaturaAtual <= temperaturaCriticoMinimo) {
+
+                    color = 'rgba(255, 0, 0, 0.8)';
+
+                    situacaoSensores.push("critico");
+
+
+                    // registrarAlerta(json[i].id_medicao, "temperatura abaixo do ideal", "critico");
+
+                } else if (temperaturaAtual >= temperaturaCriticoMaximo) {
+
+                    color = 'rgba(255, 0, 0, 0.8)';
+
+                    situacaoSensores.push("critico");
+
+                    // registrarAlerta(json[i].id_medicao, "temperatura acima do ideal", "critico");
+
+                } else if (temperaturaAtual <= temperaturaAlertaMinimo) {
+
+                    color = 'rgba(255, 166, 0, 0.69)';
+
+                    situacaoSensores.push("alerta");
+
+                    // registrarAlerta(json[i].id_medicao, "temperatura abaixo do ideal", "medio");
+
+                } else {
+
+                    color = 'rgba(255, 166, 0, 0.69)';
+
+                    situacaoSensores.push("alerta");
+
+                    // registrarAlerta(json[i].id_medicao, "temperatura acima do ideal", "medio");
+
+                }
+
+
+                kpis.innerHTML += `
+                <div class="kpi" style="background-color: ${color}">
+                    <h3 style="color: white">SENSOR ${i + 1}</h3>
+                    <center style="color: white">Temperatura Atual</center>
+                    <p id="kpiTemperatura2" style="color: white">${temperaturaAtual}°C</p>
+                    <div class="desc" style="color: white">
+                        Ideal: Entre ${temperaturaIdeal - 1}°C e ${temperaturaIdeal + 1}°C
+                    </div>
+                </div>
+            `
+
+                kpisProntos++;
+
+                console.log(kpisProntos, totalKpis)
+
+                if (kpisProntos == totalKpis) {
+                    validarStatusCamara();
+                }
+
+                buscarAlertas(selectCamaras.value);
+            })
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+
+}
+
+
+function exibirUmidadeturaAtual(sensores) {
+
+    for (let i = 0; i < sensores.length; i++) {
+
+        fetch(`/sensor/umidadeAtual/${sensores[i].id_sensor}`, {
+            method: "GET"
+        }).then(res => {
+            res.json().then(json => {
+
+                let umidadeAtual = json[0].valor;
+                let umidadeIdeal = Number(json[i].umidade_ideal);
+
+                let umidadeCriticoMinimo = umidadeIdeal - 5;
+                let umidadeCriticoMaximo = umidadeIdeal + 5;
+                let umidadeAlertaMinimo = umidadeIdeal - 4;
+
+                let color;
+
+                if (umidadeAtual >= (umidadeIdeal - 1) && umidadeAtual <= (umidadeIdeal + 1)) {
+
+                    color = 'rgba(0, 128, 0, 0.5)';
+
+                } else if (umidadeAtual <= umidadeCriticoMinimo) {
+
+                    color = 'rgba(255, 0, 0, 0.8)';
+
+                    situacaoSensores.push("critico");
+
+                    // registrarAlerta(json[i].id_medicao, "Umidade abaixo do ideal", "critico");
+
+                } else if (umidadeAtual >= umidadeCriticoMaximo) {
+
+                    color = 'rgba(255, 0, 0, 0.8)';
+
+                    situacaoSensores.push("critico");
+
+                    // registrarAlerta(json[i].id_medicao, "Umidade acima do ideal", "critico");
+
+                } else if (umidadeAtual <= umidadeAlertaMinimo) {
+
+                    color = 'rgba(255, 166, 0, 0.69)';
+
+                    situacaoSensores.push("alerta");
+
+                    // registrarAlerta(json[i].id_medicao, "Umidade abaixo do ideal", "medio");
+
+                } else {
+
+                    color = 'rgba(255, 166, 0, 0.69)';
+
+                    situacaoSensores.push("alerta");
+
+                    // registrarAlerta(json[i].id_medicao, "Umidade acima do ideal", "medio");
+
+                }
+
+                kpis.innerHTML += `
+                    <div class="kpi" style="background-color: ${color}">
+                        <h3 style="color: white">SENSOR ${i + 1}</h3>
+                        <center style="color: white">Umidade Atual</center>
+                        <p id="kpiUmidade1" style="color: white">${umidadeAtual}%</p>
+                        <div class="desc" style="color: white">
+                            Ideal: Entre ${Number(json[i].umidade_ideal) - 1}°C e ${Number(json[i].umidade_ideal) + 1}°C
+                        </div>
+                    </div>
+                `
+
+                kpisProntos++;
+
+                console.log(kpisProntos, totalKpis)
+
+                if (kpisProntos == totalKpis) {
+                    validarStatusCamara();
+                }
+
+                buscarAlertas(selectCamaras.value);
+            })
+        }).catch(err => {
+            console.log(err);
+        })
+
+    }
+}
+
+function validarStatusCamara() {
+    if (situacaoSensores.includes("critico")) {
+
+        kpis.innerHTML += `
+            <div class="kpi" id="statusCamara">
+                <h3>Status Camara</h3>
+                <p id="kpiStatusCamara">Crítico</p>
+                <div class="desc">
+                    Condição atual da câmara de acordo com temperatura e umidade
+                </div>
+                </div>
+            </div>
+        `;
+
+        kpiStatusCamara.style.color = 'rgba(255, 0, 0, 0.8)';
+
+    } else if (situacaoSensores.includes("alerta")) {
+        kpis.innerHTML += `
+            <div class="kpi" id="statusCamara">
+                <h3>Status Camara</h3>
+                <p id="kpiStatusCamara">Alerta</p>
+                <div class="desc">
+                    Condição atual da câmara de acordo com temperatura e umidade
+                </div>
+                </div>
+            </div>
+        `;
+
+
+        kpiStatusCamara.style.color = 'rgba(255, 166, 0, 0.69)';
+    } else {
+        kpis.innerHTML += `
+            <div class="kpi" id="statusCamara">
+                <h3>Status Camara</h3>
+                <p id="kpiStatusCamara">Normal</p>
+                <div class="desc">
+                    Condição atual da câmara de acordo com temperatura e umidade
+                </div>
+                </div>
+            </div>
+        `;
+        
+        kpiStatusCamara.style.color = 'rgba(0, 128, 0, 0.5)';
+    }
 }
 
 function registrarAlerta(idMedicao, mensagem, peso) {
