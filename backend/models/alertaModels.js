@@ -21,7 +21,8 @@ function listarAlertasPorSensor(idSensor) {
             m.tipo,
             a.mensagem,
             a.peso,
-            a.data_hora,
+            DATE_FORMAT(a.data_hora,'%d/%m/%Y %H:%i:%s') as dataHora,
+            DATE_FORMAT(a.data_hora,'%H:%i') as hora,
             sensor_meta.numero_serial AS nome 
         FROM alerta a
         JOIN medicao m
@@ -31,7 +32,7 @@ function listarAlertasPorSensor(idSensor) {
             JOIN sensor_meta
         ON sensor_meta.fk_sensor = s.id_sensor 
         WHERE s.id_sensor = ${idSensor}
-        ORDER BY a.data_hora DESC
+        ORDER BY dataHora DESC
         LIMIT 10;
     `;
 

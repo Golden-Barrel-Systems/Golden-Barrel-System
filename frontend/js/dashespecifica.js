@@ -136,7 +136,7 @@ async function buscarDadosGrafico() {
   let dadosUmi = [];
 
   for (let i = dados.length - 1; i >= 0; i--) {
-    let hora = dados[i].data_hora.substring(11, 16);
+    let hora = dados[i].hora;
 
     if (dados[i].tipo == "temperatura") {
       labelsTemp.push(hora);
@@ -306,7 +306,7 @@ function exibirAlertas(alertas) {
           registrou
           ${alertas[i].valor}
           ${alertas[i].tipo == "temperatura" ? "°C" : "%"} 
-          ás ${alertas[i].data_hora.substring(11, 16)}
+          ás ${alertas[i].hora}
         </p>
 
       </div>

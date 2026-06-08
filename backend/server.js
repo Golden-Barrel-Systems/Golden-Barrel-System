@@ -1,4 +1,4 @@
-const ambiente_processo = 'desenvolvimento';
+const ambiente_processo = 'producao';
 
 const caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
 

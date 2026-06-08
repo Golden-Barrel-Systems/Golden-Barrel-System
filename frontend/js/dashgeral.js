@@ -433,7 +433,7 @@ async function carregarDados() {
 
             for (let j = 0; j < medicoes.length; j++) {
                 const medicao = medicoes[j];
-                const hora = medicao.data_hora.substring(11, 16);
+                const hora = medicao.hora;
 
                 if (medicao.tipo === 'temperatura') {
                     insertOrdered(labelsTempLocal, dadosTempLocal, hora, Number(medicao.valor));
