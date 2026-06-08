@@ -1,6 +1,6 @@
 const ambiente_processo = 'desenvolvimento';
 
-const caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
+const caminho_env = ambiente_processo === 'producao' ? '.env' : '.env';
 
 require("dotenv").config({ path: caminho_env });
 
