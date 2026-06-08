@@ -342,14 +342,14 @@ function exibirAlertas(alertas) {
         if (alertas[i].mensagem == 'Umidade acima do ideal' || alertas[i].mensagem == 'Umidade abaixo do ideal') {
             listaAlertas.innerHTML += `
                 <div class="alertas${alertas[i].peso}">
-                    <h3${alertas[i].mensagem}</h3>
+                    <h3>${alertas[i].mensagem}</h3>
                     <p>Sensor ${alertas[i].numero_serial} registrou ${alertas[i].valor}% de umidade às ${alertas[i].hora}.</p>
                 </div>
             `
         } else {
             listaAlertas.innerHTML += `
                 <div class="alertas${alertas[i].peso}">
-                    <h3${alertas[i].mensagem}</h3>
+                    <h3>${alertas[i].mensagem}</h3>
                     <p>Sensor ${alertas[i].numero_serial} registrou ${alertas[i].valor}°C às ${alertas[i].hora}.</p>
                 </div>
             `
