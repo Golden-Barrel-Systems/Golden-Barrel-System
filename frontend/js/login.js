@@ -19,6 +19,9 @@ loginBtn.addEventListener('click', () => {
         if (tipoUsuario.startsWith('suporte')) {
             window.location.href="./suporte.html"
             return
+        } else if (tipoUsuario.startsWith('administrador')) {
+            window.location.href="./cadastroEmpresa.html"
+            return
         };
 
         window.location.href="./dashGeral.html"

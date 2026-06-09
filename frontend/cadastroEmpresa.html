@@ -1,64 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro - Golden Bar</title>
-    <link rel="stylesheet" href="./css/pages.css/cadastro.css" />
+    <title>Cadastro de Empresa - Golden Barrel</title>
+    <link rel="stylesheet" href="./css/pages.css/cadastroEmpresa.css"/>
+    <script src="./js/cadastroEmpresa.js"></script>
 </head>
 
 <body>
     <div class="container">
         <div class="img-section"
-            style="background-image: url('./images/pages/cadastro/img_page-0001.jpg'); background-position: center; background-size: cover; background-repeat: no-repeat;">
-            <button onclick="voltar()">Voltar</button>
+            style="background-image: url('./images/pages/cadastro/img_page-0001.jpg'); background-position: center; background-size: cover; background-repeat: no-repeat; position: relative;">
+            <button class="btn-voltar-top" onclick="voltar()" style="position: absolute; top: 20px; left: 20px; padding: 10px 20px; border: none; border-radius: 5px; background-color: #f8a001; font-size: 16px; cursor: pointer; font-weight: 600;">
+                ← Voltar
+            </button>
         </div>
         <div class="cadastro-section">
             <div class="content">
-                <h1 class="title">Cadastro - Golden Barrel System</h1>
-                <div class="form-cadastro">
-                    <div class="nome">
-                        <label for="input_nome">Nome da Empresa<span id="mensagemnome"></span></label>
-                        <input type="text" id="input_nome" class="input" placeholder="Insira o nome da empresa aqui" />
-                    </div>
-                    <div class="cnpj">
-                        <label for="input_cnpj">CNPJ <span id="mensagemcnpj"></span></label>
-                        <input type="text" id="input_cnpj" maxlength="18" oninput="CNPJ()" class="input"
-                            placeholder="Confirme seu CNPJ aqui" />
-                    </div>
-                    <div class="email">
-                        <label for="input_logradouro">Logradouro <span id="mensagememail"></span></label>
-                        <input type="text" id="input_logradouro" class="input" placeholder="Insira o logradouro aqui" />
-                    </div>
-                    <div class="password">
-                        <label for="input_numero">Número <span id="mensagemsenha"></span></label>
-                        <input type="text" id="input_numero" oninput="senhaa()" class="input"
-                            placeholder="Insira o número aqui" />
-                    </div>
-                    <div class="confirm-password">
-                        <label for="input_complemento">Complemento <span id="mensagemconfirm"></span></label>
-                        <input type="text" id="input_complemento" class="input"
-                            placeholder="Opcional" />
-                    </div>
-                    <div class="codigo">
-                        <label for="input_codigo">Bairro <span id="mensagemcod"></span></label>
-                        <input type="text" id="input_codigo" class="input" placeholder="Insira o bairro aqui" />
-                    </div>
-                    <div class="codigo">
-                        <label for="input_codigo">Bairro <span id="mensagemcod"></span></label>
-                        <input type="text" id="input_codigo" class="input" placeholder="Insira o bairro aqui" />
-                    </div>
-                    <div class="login-link">
-                        <a href="./login.html">Já tem uma conta?</a>
+                <h1 class="title">Cadastro de Empresa</h1>
+                <form class="form-cadastro" onsubmit="cadastrar(event)">
+                    <div class="form-section-title">Informações Básicas</div>
+
+                    <div class="input-group form-row-full">
+                        <label for="input_nome">Nome da Empresa *</label>
+                        <input type="text" id="input_nome" class="input" 
+                            placeholder="Ex: Golden Barrel Distribuidora" required />
+                        <span id="mensagem_nome" class="message-error"></span>
                     </div>
 
+                    <div class="input-group">
+                        <label for="input_cnpj">CNPJ *</label>
+                        <input type="text" id="input_cnpj" class="input" maxlength="18"
+                            placeholder="00.000.000/0000-00" required />
+                        <span id="mensagem_cnpj" class="message-error"></span>
+                    </div>
 
-                    <button class="btn-logar" onclick="cadastrar()">cadastrar</button>
-                </div>
+                    <div class="input-group">
+                        <label for="input_cep">CEP *</label>
+                        <input type="text" id="input_cep" class="input" maxlength="9"
+                            placeholder="00000-000" required />
+                        <span id="mensagem_cep" class="message-error"></span>
+                    </div>
+
+                    <div class="form-section-title">Endereço</div>
+
+                    <div class="input-group form-row-full">
+                        <label for="input_logradouro">Logradouro *</label>
+                        <input type="text" id="input_logradouro" class="input" 
+                            placeholder="Ex: Rua das Flores" required />
+                        <span id="mensagem_logradouro" class="message-error"></span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="input_numero">Número *</label>
+                        <input type="text" id="input_numero" class="input" 
+                            placeholder="Ex: 123" required />
+                        <span id="mensagem_numero" class="message-error"></span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="input_complemento">Complemento</label>
+                        <input type="text" id="input_complemento" class="input" 
+                            placeholder="Ex: Apto 405 (Opcional)" />
+                    </div>
+
+                    <div class="input-group form-row-full">
+                        <label for="input_bairro">Bairro *</label>
+                        <input type="text" id="input_bairro" class="input" 
+                            placeholder="Ex: Centro" required />
+                        <span id="mensagem_bairro" class="message-error"></span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="input_cidade">Cidade *</label>
+                        <input type="text" id="input_cidade" class="input" 
+                            placeholder="Ex: São Paulo" required />
+                        <span id="mensagem_cidade" class="message-error"></span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="input_uf">Estado (UF) *</label>
+                        <select id="input_uf" class="input" required style="padding-left: 30px; cursor: pointer;">
+                            <option value="">Selecione o estado</option>
+                            <option value="AC">AC - Acre</option>
+                            <option value="AL">AL - Alagoas</option>
+                            <option value="AP">AP - Amapá</option>
+                            <option value="AM">AM - Amazonas</option>
+                            <option value="BA">BA - Bahia</option>
+                            <option value="CE">CE - Ceará</option>
+                            <option value="DF">DF - Distrito Federal</option>
+                            <option value="ES">ES - Espírito Santo</option>
+                            <option value="GO">GO - Goiás</option>
+                            <option value="MA">MA - Maranhão</option>
+                            <option value="MT">MT - Mato Grosso</option>
+                            <option value="MS">MS - Mato Grosso do Sul</option>
+                            <option value="MG">MG - Minas Gerais</option>
+                            <option value="PA">PA - Pará</option>
+                            <option value="PB">PB - Paraíba</option>
+                            <option value="PR">PR - Paraná</option>
+                            <option value="PE">PE - Pernambuco</option>
+                            <option value="PI">PI - Piauí</option>
+                            <option value="RJ">RJ - Rio de Janeiro</option>
+                            <option value="RN">RN - Rio Grande do Norte</option>
+                            <option value="RS">RS - Rio Grande do Sul</option>
+                            <option value="RO">RO - Rondônia</option>
+                            <option value="RR">RR - Roraima</option>
+                            <option value="SC">SC - Santa Catarina</option>
+                            <option value="SP">SP - São Paulo</option>
+                            <option value="SE">SE - Sergipe</option>
+                            <option value="TO">TO - Tocantins</option>
+                        </select>
+                        <span id="mensagem_uf" class="message-error"></span>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="button" class="btn-voltar" onclick="voltar()">Cancelar</button>
+                        <button type="submit" class="btn-cadastrar">Cadastrar</button>
+                    </div>
+
+                    <div class="link-login">
+                        <p>Já tem uma conta? <a href="./login.html">Faça login aqui</a></p>
+                    </div>
+                </form>
             </div>
+        </div>
+    </div>
 </body>
 
 </html>
-
-<script src="./js/cadastro.js"></script>

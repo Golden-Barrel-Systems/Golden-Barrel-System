@@ -1,0 +1,194 @@
+@import url('./cadastro.css');
+
+
+body {
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+}
+
+.title{
+    position: absolute;
+    top: 5vh;
+    background-color: #f9f9f9;
+    z-index: 1000;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-height: 90vh;
+}
+
+.form-cadastro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding-top: 300px;
+    max-height: 100%;
+    overflow-y: scroll;
+    padding-inline: 10px;
+}
+
+.form-cadastro::-webkit-scrollbar {
+    width: 8px;
+}
+
+.form-cadastro::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.form-cadastro::-webkit-scrollbar-thumb {
+    background: #f8a001;
+    border-radius: 10px;
+}
+
+.form-row-full {
+    grid-column: 1 / -1;
+}
+
+.form-section-title {
+    grid-column: 1 / -1;
+    font-size: 16px;
+    font-weight: 600;
+    color: #006f53;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    border-bottom: 2px solid #f8a001;
+    padding-bottom: 8px;
+}
+
+.form-section-title:first-child {
+    margin-top: 0;
+}
+
+.action-buttons {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-cadastrar {
+    padding: 15px 80px;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    background-color: #006f53;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cadastrar:hover {
+    background-color: #005241;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 111, 83, 0.3);
+}
+
+.btn-voltar {
+    padding: 15px 80px;
+    border: 2px solid #006f53;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #006f53;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-voltar:hover {
+    background-color: #006f53;
+    color: white;
+}
+
+.message-error {
+    color: #d32f2f;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.message-success {
+    color: #006f53;
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.link-login {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.link-login a {
+    color: #f8a001;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.link-login a:hover {
+    color: #d47f00;
+    text-decoration: underline;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input::placeholder {
+    color: #999;
+}
+
+@media (max-width: 1024px) {
+    .form-cadastro {
+        grid-template-columns: 1fr;
+    }
+
+    .content {
+        height: auto;
+        padding: 30px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .img-section {
+        width: 100%;
+        height: 200px;
+    }
+
+    .cadastro-section {
+        width: 100%;
+        border-radius: 0;
+    }
+
+    .title {
+        font-size: 32px;
+    }
+
+    .form-cadastro {
+        width: 90%;
+        gap: 15px;
+    }
+
+    .btn-cadastrar,
+    .btn-voltar {
+        padding: 12px 60px;
+        font-size: 16px;
+    }
+}

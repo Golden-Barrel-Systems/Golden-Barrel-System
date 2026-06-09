@@ -6,9 +6,9 @@ function listar() {
   return database.executar(instrucaoSql);
 }
 
-function cadastrar(nome, cnpj) {
+function cadastrar(endereco, nome, cnpj, codigo) {
   const instrucaoSql = `
-    INSERT INTO empresa.cnpj, empresa.nome VALUES ('${cnpj}', '${nome}');
+    INSERT INTO empresa (fk_endereco, cnpj, nome, codigo) VALUES (${endereco}, '${cnpj}', '${nome}', '${codigo}');
   `;
 
   return database.executar(instrucaoSql);
@@ -16,7 +16,7 @@ function cadastrar(nome, cnpj) {
 
 function cadastarEndereco(l, n, c, b, ci, u, ce) {
   const instrucaoSql = `
-    INSERT INTO endereco VALUES ('${l}', '${n}', '${c}', '${b}', '${ci}', '${u}', '${ce}');
+    INSERT INTO endereco VALUES (DEFAULT, '${l}', '${n}', '${c}', '${b}', '${ci}', '${u}', '${ce}');
   `;
 
   return database.executar(instrucaoSql);

@@ -1,4 +1,5 @@
 var empresaModel = require("../models/empresaModel");
+const empresaUtils = require("../utils/empresaMiddleware")
 
 function listar(req, res) {
   empresaModel.listar().then((resultado) => {
@@ -8,7 +9,7 @@ function listar(req, res) {
 
 function cadastrar(req, res) {
   const nome = req.body.nome;
-  const cnpj = req.body.cpnj;
+  const cnpj = req.body.cnpj;
   const lograd = req.body.logradouro;
   const num = req.body.numero;
   const comp = req.body.complemento;
@@ -16,10 +17,12 @@ function cadastrar(req, res) {
   const cidade = req.body.cidade;
   const uf = req.body.uf;
   const cep = req.body.cep;
+  const letras = nome.substring(0, 3).toUpperCase()
+  const cod = empresaUtils.gerarCodigo(letras);
 
-  empresaModel.cadastrar(nome, cnpj)
+  empresaModel.cadastarEndereco(lograd, num, comp, bairro, cidade, uf, cep)
   .then((response) => {
-    empresaModel.cadastarEndereco(lograd, nome, comp, bairro, cidade, uf, cep)
+    empresaModel.cadastrar(response.insertId, nome, cnpj, cod)
     .then((resposta) => {
       return res.status(201).json({ mensagem: "Empresa cadastrada" });
     });
