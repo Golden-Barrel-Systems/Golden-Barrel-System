@@ -17,6 +17,7 @@ FROM
     camara
     JOIN empresa ON empresa.id_empresa = camara.fk_empresa;
 
+
 CREATE VIEW
     vw_selecionar_sensores AS
 SELECT
